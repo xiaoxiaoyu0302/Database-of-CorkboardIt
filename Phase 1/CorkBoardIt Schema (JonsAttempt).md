@@ -87,10 +87,11 @@ These are the entities and related attributes that must be included in the appli
 * IsOn (CorkBoard -> Pushpin)
     * Many Pushpins are owned by a single CorkBoard, which is owned by a single user.
     * Cardinality: 1 to Many
-* HasCategory (CorkBoard - Category)
+* HasCategory (Category -> CorkBoard)
 	* A CorkBoard has a Category
 	* A CorkBoard can only have one Category
-	* Cardinality: 1 to 1
+	* A Category can have many CorkBoards
+	* Cardinality: 1 to Many
 * IsTagged (Pushpin <-> Tag)
 	* A pushpin can have many tags
 	* A tag can appear on many pushpins
