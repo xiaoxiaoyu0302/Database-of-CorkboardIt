@@ -55,7 +55,7 @@ These are the entities and related attributes that must be included in the appli
 	* Id (Unique Identifier)
 		* Datatype: int (autoinc)
 	* Name
-		Datatype: VARCHAR(255)
+		* Datatype: VARCHAR(255)
 
 * Tag
 	* Id (Unique Identifier)
@@ -73,31 +73,31 @@ These are the entities and related attributes that must be included in the appli
 
 ## Relationships
 
-* Watches (User - CorkBoard)
+* Watches (User -> CorkBoard)
 	* A user can watch any number of CorkBoards
 	* Each User has a list of CorkBoards that they watch
     * Cardinality: 1 to Many
-* Owns (User - CorkBoard)
+* Owns (User -> CorkBoard)
     * A user can own any number of Corkboards, but each Corkboard can only be owned by one user. A corkboard cannot exist without ownership.
     * Cardinality: 1 to Many
-* Follows (User - User)
+* Follows (User -> User)
     * A user can follow any number of other users.
 	* Each user has a list of users they follow.
     * Cardinality: 1 to Many
-* IsOn (CorkBoard - Pushpin)
+* IsOn (CorkBoard -> Pushpin)
     * Many Pushpins are owned by a single CorkBoard, which is owned by a single user.
     * Cardinality: 1 to Many
 * HasCategory (CorkBoard - Category)
 	* A CorkBoard has a Category
 	* A CorkBoard can only have one Category
 	* Cardinality: 1 to 1
-* IsTagged
+* IsTagged (Pushpin <-> Tag)
 	* A pushpin can have many tags
 	* A tag can appear on many pushpins
 	* Cardinality: Many to Many
-* Likes (User - Pushpin)
+* Likes (User <-> Pushpin)
     * Any number of users are able to like any number of Pushpins. They are also able to rescind these likes.
     * Cardinality: Many to Many
-* Commented (User - Pushpin)
+* Commented (User <-> Pushpin)
     * Any number of users can comment on any number of Pushpins. Comments cannot be deleted.
     * Cardinality: Many to Many
