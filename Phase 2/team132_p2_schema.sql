@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS "Pushpin";
 CREATE TABLE "Pushpin" (
   id SERIAL PRIMARY KEY NOT NULL,
   description TEXT,
+  corkboard_id INTEGER NOT NULL,
   image_link TEXT NOT NULL,
   time_added TIMESTAMP NOT NULL
 );
