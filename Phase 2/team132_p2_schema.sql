@@ -21,7 +21,14 @@ DROP TABLE IF EXISTS "Corkboard";
 CREATE TABLE "Corkboard" (
   id SERIAL PRIMARY KEY NOT NULL,
   title VARCHAR(255) NOT NULL,
-  category VARCHAR(255) NOT NULL
+  category VARCHAR(255) NOT NULL,
+  owner VARCHAR(255) NOT NULL,
+  password VARCHAR(255)
+);
+
+DROP TABLE IF EXISTS "Category";
+CREATE TABLE "Category" (
+  category_name VARCHAR(255) PRIMARY KEY NOT NULL
 );
 
 DROP TABLE IF EXISTS "Comment";
@@ -59,5 +66,3 @@ CREATE TABLE "Watch" (
   corkboard_id INTEGER NOT NULL,
   PRIMARY KEY(user_email, corkboard_id)
 );
-
--- Constraints
