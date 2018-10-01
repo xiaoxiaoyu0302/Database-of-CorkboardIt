@@ -15,7 +15,7 @@ CREATE TABLE "Pushpin" (
   description TEXT,
   corkboard_id INTEGER NOT NULL,
   image_link TEXT NOT NULL,
-  time_added TIMESTAMP NOT NULL,
+  time_added TIMESTAMP NOT NULL
 );
 
 DROP TABLE IF EXISTS "Corkboard";
