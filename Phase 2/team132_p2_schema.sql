@@ -1,8 +1,8 @@
 -- Our database will be using the Postgres engine.
 
 -- Tables
-DROP TABLE IF EXISTS "User";
-CREATE TABLE "User" (
+DROP TABLE IF EXISTS "Users";
+CREATE TABLE "Users" (
   email VARCHAR(255) PRIMARY KEY NOT NULL,
   first_name VARCHAR(255) NOT NULL,
   last_name VARCHAR(255) NOT NULL,
@@ -32,8 +32,8 @@ CREATE TABLE "Category" (
   category_name VARCHAR(255) PRIMARY KEY NOT NULL
 );
 
-DROP TABLE IF EXISTS "Comment";
-CREATE TABLE "Comment" (
+DROP TABLE IF EXISTS "Comments";
+CREATE TABLE "Comments" (
   id SERIAL PRIMARY KEY NOT NULL,
   pushpin_id INTEGER,
   text TEXT NOT NULL,
@@ -42,51 +42,71 @@ CREATE TABLE "Comment" (
 
 DROP TABLE IF EXISTS "Tag";
 CREATE TABLE "Tag" (
-  text TEXT NOT NULL,
-  pushpin_id INTEGER NOT NULL,
-  PRIMARY KEY(text, pushpin_id)
+  id INTEGER PRIMARY KEY NOT NULL,
+  text TEXT NOT NULL
 );
 
-DROP TABLE IF EXISTS "Like";
-CREATE TABLE "Like" (
+DROP TABLE IF EXISTS "Liked";
+CREATE TABLE "Liked" (
   user_email VARCHAR(255) NOT NULL,
   pushpin_id INTEGER NOT NULL,
   PRIMARY KEY(user_email, pushpin_id)
 );
 
-DROP TABLE IF EXISTS "Follow";
-CREATE TABLE "Follow" (
+DROP TABLE IF EXISTS "Followed";
+CREATE TABLE "Followed" (
   user_email VARCHAR(255) NOT NULL,
   followed_user_email varchar(255) NOT NULL,
   PRIMARY KEY(user_email, followed_user_email)
 );
 
-DROP TABLE IF EXISTS "Watch";
-CREATE TABLE "Watch" (
+DROP TABLE IF EXISTS "Watched";
+CREATE TABLE "Watched" (
   user_email VARCHAR(255) NOT NULL,
   corkboard_id INTEGER NOT NULL,
   PRIMARY KEY(user_email, corkboard_id)
 );
 
+DROP TABLE IF EXISTS "Tagged"
+CREATE TABLE "Tagged" (
+  pushpin_id INTEGER NOT NULL,
+  tag_id  INTEGER NOT NULL,
+  PRIMARY KEY(pushpin_id, tag_id)
+);
+ 
+DROP TABLE IF EXISTS "Commented"
+CREATE TABLE "Commented" (
+  user_email VARCHAR(255) NOT NULL,
+  comment_id  INTEGER NOT NULL,
+  PRIMARY KEY(user_email, comment_id)
+);
+ 
 -- Constraints
 ALTER TABLE Corkboard
-  ADD FOREIGN KEY (owner) REFERENCES User(email);
+  ADD FOREIGN KEY (owner) REFERENCES Users(email);
 
 ALTER TABLE Pushpin
   ADD FOREIGN KEY (corkboard_id) REFERENCES Corkboard(id);
   
-ALTER TABLE Comment
+ALTER TABLE Comments
   ADD FOREIGN KEY (pushpin_id) REFERENCES Pushpin(id);
 
-ALTER TABLE Tag
+ALTER TABLE Tagged
   ADD FOREIGN KEY (pushpin_id) REFERENCES Pushpin(id);
-  
-ALTER TABLE Like
+  ADD FOREIGN KEY (tag_id) REFERENCES Tag(id); 
+ 
+ALTER TABLE Liked
   ADD FOREIGN KEY (pushpin_id) REFERENCES Pushpin(id);
+   ADD FOREIGN KEY (user_email) REFERENCES Users(user_email);
   
-ALTER TABLE Follow
-  ADD FOREIGN KEY (user_email) REFERENCES User(email),
-  ADD FOREIGN KEY (followed_user_email) REFERENCES User(email);
+ALTER TABLE Followed
+  ADD FOREIGN KEY (user_email) REFERENCES Users(email),
+  ADD FOREIGN KEY (followed_user_email) REFERENCES Users(email);
   
-ALTER TABLE Watch
+ALTER TABLE Watched
   ADD FOREIGN KEY (corkboard_id) REFERENCES Corkboard(id);
+  ADD FOREIGN KEY (user_email) REFERENCES Users(user_email);  
+  
+ALTER TABLE Commented
+  ADD FOREIGN KEY (user_email) REFERENCES Users(user_email);
+  ADD FOREIGN KEY (comment_id) REFERENCES Comments(id);  
