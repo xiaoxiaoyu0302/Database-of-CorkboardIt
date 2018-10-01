@@ -15,7 +15,7 @@ CREATE TABLE "Pushpin" (
   description TEXT,
   corkboard_id INTEGER NOT NULL,
   image_link TEXT NOT NULL,
-  time_added TIMESTAMP NOT NULL
+  time_added TIMESTAMP NOT NULL,
 );
 
 DROP TABLE IF EXISTS "Corkboard";
@@ -67,3 +67,26 @@ CREATE TABLE "Watch" (
   corkboard_id INTEGER NOT NULL,
   PRIMARY KEY(user_email, corkboard_id)
 );
+
+-- Constraints
+ALTER TABLE Corkboard
+  ADD FOREIGN KEY (owner) REFERENCES User(email);
+
+ALTER TABLE Pushpin
+  ADD FOREIGN KEY (corkboard_id) REFERENCES Corkboard(id);
+  
+ALTER TABLE Comment
+  ADD FOREIGN KEY (pushpin_id) REFERENCES Pushpin(id);
+
+ALTER TABLE Tag
+  ADD FOREIGN KEY (pushpin_id) REFERENCES Pushpin(id);
+  
+ALTER TABLE Like
+  ADD FOREIGN KEY (pushpin_id) REFERENCES Pushpin(id);
+  
+ALTER TABLE Follow
+  ADD FOREIGN KEY (user_email) REFERENCES User(email),
+  ADD FOREIGN KEY (followed_user_email) REFERENCES User(email);
+  
+ALTER TABLE Watch
+  ADD FOREIGN KEY (corkboard_id) REFERENCES Corkboard(id);
