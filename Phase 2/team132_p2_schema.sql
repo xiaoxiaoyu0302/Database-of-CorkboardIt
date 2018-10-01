@@ -1,8 +1,8 @@
 -- Our database will be using the Postgres engine.
 
 -- Tables
-DROP TABLE IF EXISTS "Users";
-CREATE TABLE "Users" (
+DROP TABLE IF EXISTS "User";
+CREATE TABLE "User" (
   email VARCHAR(255) PRIMARY KEY NOT NULL,
   first_name VARCHAR(255) NOT NULL,
   last_name VARCHAR(255) NOT NULL,
@@ -32,8 +32,8 @@ CREATE TABLE "Category" (
   category_name VARCHAR(255) PRIMARY KEY NOT NULL
 );
 
-DROP TABLE IF EXISTS "Comments";
-CREATE TABLE "Comments" (
+DROP TABLE IF EXISTS "Comment";
+CREATE TABLE "Comment" (
   id SERIAL PRIMARY KEY NOT NULL,
   pushpin_id INTEGER,
   text TEXT NOT NULL,
@@ -82,31 +82,31 @@ CREATE TABLE "Commented" (
 );
  
 -- Constraints
-ALTER TABLE Corkboard
-  ADD FOREIGN KEY (owner) REFERENCES Users(email);
+ALTER TABLE "Corkboard"
+  ADD FOREIGN KEY (owner) REFERENCES "User"(email);
 
-ALTER TABLE Pushpin
-  ADD FOREIGN KEY (corkboard_id) REFERENCES Corkboard(id);
+ALTER TABLE "Pushpin"
+  ADD FOREIGN KEY (corkboard_id) REFERENCES "Corkboard"(id);
   
-ALTER TABLE Comments
-  ADD FOREIGN KEY (pushpin_id) REFERENCES Pushpin(id);
+ALTER TABLE "Comment"
+  ADD FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
 
-ALTER TABLE Tagged
-  ADD FOREIGN KEY (pushpin_id) REFERENCES Pushpin(id);
-  ADD FOREIGN KEY (tag_id) REFERENCES Tag(id); 
+ALTER TABLE "Tagged"
+  ADD FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
+  ADD FOREIGN KEY (tag_id) REFERENCES "Tag"(id); 
  
-ALTER TABLE Liked
-  ADD FOREIGN KEY (pushpin_id) REFERENCES Pushpin(id);
-   ADD FOREIGN KEY (user_email) REFERENCES Users(user_email);
+ALTER TABLE "Liked"
+  ADD FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
+   ADD FOREIGN KEY (user_email) REFERENCES "User"(email);
   
-ALTER TABLE Followed
-  ADD FOREIGN KEY (user_email) REFERENCES Users(email),
-  ADD FOREIGN KEY (followed_user_email) REFERENCES Users(email);
+ALTER TABLE "Followed"
+  ADD FOREIGN KEY (user_email) REFERENCES "User"(email),
+  ADD FOREIGN KEY (followed_user_email) REFERENCES "User"(email);
   
-ALTER TABLE Watched
-  ADD FOREIGN KEY (corkboard_id) REFERENCES Corkboard(id);
-  ADD FOREIGN KEY (user_email) REFERENCES Users(user_email);  
+ALTER TABLE"Watched"
+  ADD FOREIGN KEY (corkboard_id) REFERENCES "Corkboard"(id);
+  ADD FOREIGN KEY (user_email) REFERENCES "User"(email);  
   
-ALTER TABLE Commented
-  ADD FOREIGN KEY (user_email) REFERENCES Users(user_email);
-  ADD FOREIGN KEY (comment_id) REFERENCES Comments(id);  
+ALTER TABLE "Commented"
+  ADD FOREIGN KEY (user_email) REFERENCES "User"(email);
+  ADD FOREIGN KEY (comment_id) REFERENCES "Comment"(id);  
