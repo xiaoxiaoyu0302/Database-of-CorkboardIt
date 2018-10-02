@@ -35,16 +35,14 @@ CREATE TABLE "Category" (
 
 DROP TABLE IF EXISTS "Comment";
 CREATE TABLE "Comment" (
-  text TEXT NOT NULL,
+  comment_id SERIAL INTEGER NOT NULL,
+  comment_text TEXT NOT NULL,
   time_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  user_email VARCHAR(255) NOT NULL,
-  pushpin_id INTEGER NOT NULL,
-  PRIMARY KEY(user_email, pushpin_id)
 );
 
 DROP TABLE IF EXISTS "Tag";
 CREATE TABLE "Tag" (
-  text VARCHAR(20) PRIMARY KEY NOT NULL
+  tag_text VARCHAR(20) PRIMARY KEY NOT NULL
 );
 
 DROP TABLE IF EXISTS "Liked";
@@ -71,8 +69,16 @@ CREATE TABLE "Watched" (
 DROP TABLE IF EXISTS "Tagged"
 CREATE TABLE "Tagged" (
   pushpin_id INTEGER NOT NULL,
-  tag  VARCHAR(20) NOT NULL,
-  PRIMARY KEY(pushpin_id, tag_id)
+  tag_text VARCHAR(20) NOT NULL,
+  PRIMARY KEY(pushpin_id, tag)
+);
+
+DROP TABLE IF EXISTS "Commented"
+CREATE TABLE "Commented" (
+  comment_id INTEGER NOT NULL,
+  user_email VARCHAR(255) NOT NULL,
+  pushpin_id INTEGER NOT NULL,
+  PRIMARY KEY(comment_id, user_email, pushpin_id)
 );
 
 -- Constraints
@@ -86,19 +92,24 @@ ALTER TABLE "Pushpin"
 ALTER TABLE "Comment"
   ADD FOREIGN KEY (user_email) REFERENCES "User"(email);
   ADD FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
-
-ALTER TABLE "Tagged"
-  ADD FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
-  ADD FOREIGN KEY (tag) REFERENCES "Tag"(text); 
  
 ALTER TABLE "Liked"
   ADD FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
-   ADD FOREIGN KEY (user_email) REFERENCES "User"(email);
+  ADD FOREIGN KEY (user_email) REFERENCES "User"(email);
   
 ALTER TABLE "Followed"
   ADD FOREIGN KEY (user_email) REFERENCES "User"(email),
   ADD FOREIGN KEY (followed_user_email) REFERENCES "User"(email);
   
-ALTER TABLE"Watched"
+ALTER TABLE "Watched"
   ADD FOREIGN KEY (corkboard_id) REFERENCES "Corkboard"(id);
   ADD FOREIGN KEY (user_email) REFERENCES "User"(email);  
+
+ALTER TABLE "Tagged"
+  ADD FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
+  ADD FOREIGN KEY (tag_text) REFERENCES "Tag"(tag_text); 
+
+ALTER TABLE "Commented"
+  ADD FOREIGN KEY (comment_id) REFERENCES "Comment"(comment_id);
+  ADD FOREIGN KEY (user_email) REFERENCES "User"(email);
+  ADD FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
