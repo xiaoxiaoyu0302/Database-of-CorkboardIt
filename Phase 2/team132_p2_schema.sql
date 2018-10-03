@@ -15,17 +15,17 @@ CREATE TABLE "Corkboard" (
   title VARCHAR(50) NOT NULL,
   is_private BIT NOT NULL,
   password VARCHAR(255),
-  owner VARCHAR(255) NOT NULL,
-  category_name VARCHAR(255) NOT NULL
+  fk_Corkboard_owner_User_email VARCHAR(255) NOT NULL,
+  fk_Corkboard_category_Category_category_name VARCHAR(255) NOT NULL
 );
 
 DROP TABLE IF EXISTS "Pushpin";
 CREATE TABLE "Pushpin" (
   id SERIAL PRIMARY KEY NOT NULL,
   description VARCHAR(200),
-  corkboard_id INTEGER NOT NULL,
   image_link TEXT NOT NULL,
-  time_added TIMESTAMP NOT NULL
+  time_added TIMESTAMP NOT NULL,
+  fk_Pushpin_corkboard_Corkboard_id INTEGER NOT NULL
 );
 
 DROP TABLE IF EXISTS "Category";
@@ -35,7 +35,7 @@ CREATE TABLE "Category" (
 
 DROP TABLE IF EXISTS "Comment";
 CREATE TABLE "Comment" (
-  comment_id SERIAL INTEGER NOT NULL,
+  id SERIAL PRIMARY KEY NOT NULL,
   comment_text TEXT NOT NULL,
   time_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -47,69 +47,72 @@ CREATE TABLE "Tag" (
 
 DROP TABLE IF EXISTS "Liked";
 CREATE TABLE "Liked" (
-  user_email VARCHAR(255) NOT NULL,
-  pushpin_id INTEGER NOT NULL,
-  PRIMARY KEY(user_email, pushpin_id)
+  fk_Liked_user_User_email VARCHAR(255) NOT NULL,
+  fk_Liked_pushpin_User_id INTEGER NOT NULL,
+  PRIMARY KEY(fk_Liked_user_User_email, fk_Liked_pushpin_User_id)
 );
 
 DROP TABLE IF EXISTS "Followed";
 CREATE TABLE "Followed" (
-  user_email VARCHAR(255) NOT NULL,
-  followed_user_email varchar(255) NOT NULL,
-  PRIMARY KEY(user_email, followed_user_email)
+  fk_Followed_user_User_email VARCHAR(255) NOT NULL,
+  fk_Followed_followed_user_User_email varchar(255) NOT NULL,
+  PRIMARY KEY(fk_Followed_user_User_email, fk_Followed_followed_user_User_email)
 );
 
 DROP TABLE IF EXISTS "Watched";
 CREATE TABLE "Watched" (
-  user_email VARCHAR(255) NOT NULL,
-  corkboard_id INTEGER NOT NULL,
-  PRIMARY KEY(user_email, corkboard_id)
+  fk_Watched_user_User_email VARCHAR(255) NOT NULL,
+  fk_Pushpin_corkboard_Corkboard_id INTEGER NOT NULL,
+  PRIMARY KEY(fk_Watched_user_User_email, fk_Pushpin_corkboard_Corkboard_id)
 );
 
-DROP TABLE IF EXISTS "Tagged"
+DROP TABLE IF EXISTS "Tagged";
 CREATE TABLE "Tagged" (
-  pushpin_id INTEGER NOT NULL,
-  tag_text VARCHAR(20) NOT NULL,
-  PRIMARY KEY(pushpin_id, tag)
+  fk_Tagged_pushpin_Pushpin_id INTEGER NOT NULL,
+  fk_Tagged_tag_Tag_tag_text VARCHAR(20) NOT NULL,
+  PRIMARY KEY(fk_Tagged_pushpin_Pushpin_id, fk_Tagged_tag_Tag_tag_text)
 );
 
-DROP TABLE IF EXISTS "Commented"
+DROP TABLE IF EXISTS "Commented";
 CREATE TABLE "Commented" (
-  comment_id INTEGER NOT NULL,
-  user_email VARCHAR(255) NOT NULL,
-  pushpin_id INTEGER NOT NULL,
-  PRIMARY KEY(comment_id, user_email, pushpin_id)
+  fk_Commented_comment_Comment_id INTEGER NOT NULL,
+  fk_Commented_user_User_email VARCHAR(255) NOT NULL,
+  fk_Commented_pushpin_Pushpin_id INTEGER NOT NULL,
+  PRIMARY KEY(fk_Commented_comment_Comment_id, fk_Commented_user_User_email, fk_Commented_pushpin_Pushpin_id)
 );
 
 -- Constraints
 ALTER TABLE "Corkboard"
-  ADD FOREIGN KEY (owner) REFERENCES "User"(email);
-  ADD FOREIGN KEY (category_name) REFERENCES "Category"(category_name);
+  ADD FOREIGN KEY (fk_Corkboard_owner_User_email) REFERENCES "User"(email);
+ALTER TABLE "Corkboard"
+  ADD FOREIGN KEY (fk_Corkboard_category_Category_category_name) REFERENCES "Category"(category_name);
 
 ALTER TABLE "Pushpin"
-  ADD FOREIGN KEY (corkboard_id) REFERENCES "Corkboard"(id);
+  ADD FOREIGN KEY (fk_Pushpin_corkboard_Corkboard_id) REFERENCES "Corkboard"(id);
   
-ALTER TABLE "Comment"
-  ADD FOREIGN KEY (user_email) REFERENCES "User"(email);
-  ADD FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
- 
 ALTER TABLE "Liked"
-  ADD FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
-  ADD FOREIGN KEY (user_email) REFERENCES "User"(email);
+  ADD FOREIGN KEY (fk_Liked_user_User_email) REFERENCES "User"(email);
+ALTER TABLE "Liked"
+  ADD FOREIGN KEY (fk_Liked_pushpin_User_id) REFERENCES "Pushpin"(id);
   
 ALTER TABLE "Followed"
-  ADD FOREIGN KEY (user_email) REFERENCES "User"(email),
-  ADD FOREIGN KEY (followed_user_email) REFERENCES "User"(email);
+  ADD FOREIGN KEY (fk_Followed_user_User_email) REFERENCES "User"(email);
+ALTER TABLE "Followed"
+  ADD FOREIGN KEY (fk_Followed_followed_user_User_email) REFERENCES "User"(email);
   
 ALTER TABLE "Watched"
-  ADD FOREIGN KEY (corkboard_id) REFERENCES "Corkboard"(id);
-  ADD FOREIGN KEY (user_email) REFERENCES "User"(email);  
+  ADD FOREIGN KEY (fk_Watched_user_User_email) REFERENCES "User"(email);  
+ALTER TABLE "Watched"
+  ADD FOREIGN KEY (fk_Pushpin_corkboard_Corkboard_id) REFERENCES "Corkboard"(id);  
 
 ALTER TABLE "Tagged"
-  ADD FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
-  ADD FOREIGN KEY (tag_text) REFERENCES "Tag"(tag_text); 
+  ADD FOREIGN KEY (fk_Tagged_pushpin_Pushpin_id) REFERENCES "Pushpin"(id);
+ALTER TABLE "Tagged"
+  ADD FOREIGN KEY (fk_Tagged_tag_Tag_tag_text) REFERENCES "Tag"(tag_text); 
 
 ALTER TABLE "Commented"
-  ADD FOREIGN KEY (comment_id) REFERENCES "Comment"(comment_id);
-  ADD FOREIGN KEY (user_email) REFERENCES "User"(email);
-  ADD FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
+  ADD FOREIGN KEY (fk_Commented_comment_Comment_id) REFERENCES "Comment"(id);
+ALTER TABLE "Commented"
+  ADD FOREIGN KEY (fk_Commented_user_User_email) REFERENCES "User"(email);
+ALTER TABLE "Commented"
+  ADD FOREIGN KEY (fk_Commented_pushpin_Pushpin_id) REFERENCES "Pushpin"(id);
