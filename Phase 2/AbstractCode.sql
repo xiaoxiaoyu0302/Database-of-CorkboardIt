@@ -40,3 +40,7 @@ WHERE "Pushpin".corkboard_id IN ($'corkboard_IDs')
 GROUP BY "Pushpin".corkboard_id
 ORDER BY most_recent_update DESC
 LIMIT 4;
+
+-- Create New Corkboard
+INSERT INTO "Corkboard" (title, is_private, password, owner, category)
+VALUES ('$title', '$is_private', '$password', '$owner', '$category');
