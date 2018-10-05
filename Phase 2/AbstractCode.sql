@@ -8,7 +8,8 @@ WHERE email='$email';
 
 -- Get Owned Corkboards
 SELECT id, title, owner, is_private, category FROM "Corkboard"
-where owner = '$email';
+WHERE owner = '$email'
+ORDER BY title ASC;
 
 -- Get Watched Corkboards
 SELECT "Corkboard".id, "Corkboard".title, "Corkboard".owner, "Corkboard".is_private, "Corkboard".category FROM "Corkboard"
