@@ -42,8 +42,11 @@ CREATE TABLE "Comment" (
 
 DROP TABLE IF EXISTS "Tag";
 CREATE TABLE "Tag" (
-  tag_text VARCHAR(20) PRIMARY KEY NOT NULL
+  pushpin_id INTEGER NOT NULL,
+  tag_text VARCHAR(20) NOT NULL,
+  PRIMARY KEY(pushpin_id, tag_text)
 );
+
 
 DROP TABLE IF EXISTS "Liked";
 CREATE TABLE "Liked" (
@@ -64,13 +67,6 @@ CREATE TABLE "Watched" (
   user_email VARCHAR(255) NOT NULL,
   corkboard_id INTEGER NOT NULL,
   PRIMARY KEY(user_email, corkboard_id)
-);
-
-DROP TABLE IF EXISTS "Tagged";
-CREATE TABLE "Tagged" (
-  pushpin_id INTEGER NOT NULL,
-  tag_text VARCHAR(20) NOT NULL,
-  PRIMARY KEY(pushpin_id, tag_text)
 );
 
 DROP TABLE IF EXISTS "Commented";
@@ -114,12 +110,9 @@ ALTER TABLE "Watched"
   ADD CONSTRAINT fk_Watched_corkboard_id_Corkboard_id
   FOREIGN KEY (corkboard_id) REFERENCES "Corkboard"(id);
 
-ALTER TABLE "Tagged"
-  ADD CONSTRAINT fk_Tagged_pushpin_id_Pushpin_id
+ALTER TABLE "Tag"
+  ADD CONSTRAINT fk_Tag_pushpin_id_Pushpin_id
   FOREIGN KEY (pushpin_id) REFERENCES "Pushpin"(id);
-ALTER TABLE "Tagged"
-  ADD CONSTRAINT fk_Tagged_tag_text_Tag_tag_text
-  FOREIGN KEY (tag_text) REFERENCES "Tag"(tag_text);
 
 ALTER TABLE "Commented"
   ADD CONSTRAINT fk_Commented_comment_id_Comment_id
