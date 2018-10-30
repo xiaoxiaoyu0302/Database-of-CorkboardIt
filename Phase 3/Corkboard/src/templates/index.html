@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>This is our GA Tech application.</h1>
-    {% for post in posts %}
-    <div><p>{{ post.author }} says: <b>{{ post.body }}</b></p></div>
+    <h1>Recent Corkboard Updates</h1>
+    <button>Popular Tags</button>
+    {% for update in updates %}
+    <div><p>{{ update.title }}</p></div>
+    {% endfor %}
+    <h1>My Corkboards</h1>
+    <button>Add Corkboard</button>
+    {% for corkboard in corkboards %}
+    <div><p>{{ corkboard.title }}</p></div>
     {% endfor %}
 {% endblock %}
