@@ -1,6 +1,7 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, g
 from src import app
 from src.forms import LoginForm
+from app import get_db
 
 
 @app.route('/')
@@ -18,6 +19,13 @@ def index():
 def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        flash('Login requested for user {}'.format(login_form.username.data))
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(open('src/sql/login.sql', 'r').read().format(email=login_form.email.data,
+                                                                    pin=login_form.pin.data))
+        if len(cursor.fetchone()) == 0:
+            flash("Unable to login. Try again.")
+        else:
+            flash("Login successful.")
         return redirect(url_for('index'))
     return render_template('login.html', form=login_form)
