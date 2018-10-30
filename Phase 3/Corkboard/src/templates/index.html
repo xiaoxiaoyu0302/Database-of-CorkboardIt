@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Recent Corkboard Updates</h1>
+    <h1>Welcome, {{ user.first_name }} {{ user.last_name }}!</h1>
+    <hr>
+
+    <h2>Recent Corkboard Updates</h2>
     <button>Popular Tags</button>
     {% for update in updates %}
     <div><p>{{ update.title }}</p></div>
     {% endfor %}
-    <h1>My Corkboards</h1>
+
+    <h2>My Corkboards</h2>
     <button>Add Corkboard</button>
     {% for corkboard in corkboards %}
     <div><p>{{ corkboard.title }}</p></div>
