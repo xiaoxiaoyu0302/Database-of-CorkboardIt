@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, session, request
+from flask import render_template, flash, redirect, url_for, session
 from src import app
 from src.forms import LoginForm
 from app import get_db
@@ -8,11 +8,18 @@ from psycopg2.extras import RealDictCursor
 @app.route('/')
 @app.route('/index')
 def index():
+    if 'logged_in_user' not in session:
+        return redirect(url_for('login'))
+
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
+
     cursor.execute(open('src/sql/recent_updates.sql').read())
     updates = cursor.fetchall()
-    return render_template('index.html', updates=updates, corkboards=[])
+
+    cursor.execute(open('src/sql/owned_corkboards.sql').read().format(email=session['logged_in_user']['email']))
+    corkboards = cursor.fetchall()
+    return render_template('index.html', updates=updates, corkboards=corkboards, user=session['logged_in_user'])
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -27,7 +34,7 @@ def login():
         if user is None:
             flash("Unable to login. Try again.")
         else:
-            session.logged_in_user = user
+            session['logged_in_user'] = user
             return redirect(url_for('index'))
     return render_template('login.html', form=login_form)
 
@@ -35,6 +42,5 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('logged_in_user', None)
-    login_form = LoginForm
-    return render_template('login.html', form=login_form)
+    return redirect(url_for('login'))
 
