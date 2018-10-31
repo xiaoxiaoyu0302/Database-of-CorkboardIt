@@ -5,7 +5,7 @@
     <hr>
 
     <h2>Recent Corkboard Updates</h2>
-    <button>Popular Tags</button>
+    <a href="{{ url_for('get_popular_tags') }}"><input type="button" value="Popular Tags"></a>
     {% for update in updates %}
     <div><p>{{ update.title }}</p></div>
     {% endfor %}

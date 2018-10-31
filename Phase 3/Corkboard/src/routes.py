@@ -45,6 +45,11 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/addcorkboard')
+@app.route('/addcorkboard', methods=['GET', 'POST'])
 def add_corkboard():
-    return render_template('add_corkboard.html')
+    return render_template('add_corkboard.html', user=session['logged_in_user'])
+
+
+@app.route('/populartags')
+def get_popular_tags():
+    return render_template('popular_tags.html', user=session['logged_in_user'])
