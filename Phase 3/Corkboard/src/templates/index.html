@@ -11,7 +11,7 @@
     {% endfor %}
 
     <h2>My Corkboards</h2>
-    <button>Add Corkboard</button>
+    <a href="{{ url_for('add_corkboard') }}"><input type="button" value="Add Corkboard"></a>
     {% for corkboard in corkboards %}
     <div><p>{{ corkboard.title }}</p></div>
     {% endfor %}

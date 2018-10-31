@@ -44,3 +44,7 @@ def logout():
     session.pop('logged_in_user', None)
     return redirect(url_for('login'))
 
+
+@app.route('/addcorkboard')
+def add_corkboard():
+    return render_template('add_corkboard.html')
