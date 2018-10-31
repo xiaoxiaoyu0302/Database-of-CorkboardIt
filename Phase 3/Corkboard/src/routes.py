@@ -1,12 +1,12 @@
 from flask import render_template, flash, redirect, url_for, session
 from src import app
-from src.forms import LoginForm
+from src.forms import LoginForm, PushpinSearchForm
 from app import get_db
 from psycopg2.extras import RealDictCursor
 
 
 @app.route('/')
-@app.route('/index')
+@app.route('/index', methods=['GET', 'POST'])
 def index():
     if 'logged_in_user' not in session:
         return redirect(url_for('login'))
@@ -19,7 +19,12 @@ def index():
 
     cursor.execute(open('src/sql/owned_corkboards.sql').read().format(email=session['logged_in_user']['email']))
     corkboards = cursor.fetchall()
-    return render_template('index.html', updates=updates, corkboards=corkboards, user=session['logged_in_user'])
+
+    search_form = PushpinSearchForm()
+    if search_form.validate_on_submit():
+        flash(search_form.search.data)
+    return render_template('index.html', updates=updates, corkboards=corkboards, user=session['logged_in_user'],
+                           form=search_form)
 
 
 @app.route('/login', methods=['GET', 'POST'])

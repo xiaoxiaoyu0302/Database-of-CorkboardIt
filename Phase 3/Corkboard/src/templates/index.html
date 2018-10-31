@@ -15,4 +15,16 @@
     {% for corkboard in corkboards %}
     <div><p>{{ corkboard.title }}</p></div>
     {% endfor %}
+    <hr>
+
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.search(size=32) }}<br>
+            {% for error in form.search.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+            {{ form.submit() }}
+        </p>
+    </form>
 {% endblock %}
