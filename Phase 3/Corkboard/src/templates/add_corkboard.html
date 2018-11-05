@@ -2,25 +2,31 @@
 
 {% block content %}
     <h1>Add Corkboard</h1>
-    <form action="" method="post" novalidate>
+    <form action="" method="post" novalidate class="pure-form pure-form-aligned">
         {{ form.hidden_tag() }}
-        <p>
-            {{ form.title.label }}<br/>
-            {{ form.title(size=60) }}<br/>
-            {% for error in form.title.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.is_private.label }}<br/>
-            {{ form.is_private }}<br/>
-        </p>
-        <p>
-            {{ form.password.label }}<br/>
-            {{ form.password(size=32) }}<br/>
-        </p>
-        <p>
-            {{ form.submit() }}
-        </p>
+        <fieldset>
+            <div class="pure-control-group">
+                {{ form.title.label }}
+                {{ form.title(size=60) }}
+                {% for error in form.title.errors %}
+                <span class="pure-form-message">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <!--<div class="pure-control-group">
+                {{ form.category.label }}
+                {{ form.category }}
+            </div>-->
+            <div class="pure-control-group">
+                {{ form.is_private.label }}
+                {{ form.is_private }}
+            </div>
+            <div class="pure-control-group">
+                {{ form.password.label }}
+                {{ form.password(size=32) }}
+            </div>
+            <div class="pure-control-group">
+                 {{ form.submit(class_="pure-button pure-button-primary") }}
+            </div>
+        </fieldset>
     </form>
 {% endblock %}

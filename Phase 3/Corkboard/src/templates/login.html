@@ -2,24 +2,26 @@
 
 {% block content %}
     <h1>Log In</h1>
-    <form action="" method="post" novalidate>
+    <form action="" method="post" novalidate class="pure-form pure-form-aligned">
         {{ form.hidden_tag() }}
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email(size=32) }}<br>
-            {% for error in form.email.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.pin.label }}<br>
-            {{ form.pin(size=32) }}<br>
-            {% for error in form.pin.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.submit() }}
-        </p>
+        <fieldset>
+            <div class="pure-control-group">
+                {{ form.email.label }}
+                {{ form.email(size=32) }}
+                {% for error in form.email.errors %}
+                <span class="pure-form-message">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="pure-control-group">
+                {{ form.pin.label }}
+                {{ form.pin(size=32) }}
+                {% for error in form.pin.errors %}
+                <span class="pure-form-message">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="pure-control-group">
+                 {{ form.submit(class_="pure-button pure-button-primary") }}
+            </div>
+        </fieldset>
     </form>
 {% endblock %}
