@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, session
 from src import app
-from src.forms import LoginForm, PushpinSearchForm
+from src.forms import LoginForm, PushpinSearchForm, AddCorkboardForm
 from app import get_db
 from psycopg2.extras import RealDictCursor
 
@@ -52,6 +52,16 @@ def logout():
 
 @app.route('/addcorkboard', methods=['GET', 'POST'])
 def add_corkboard():
+    add_form = AddCorkboardForm
+    if add_form.validate_on_submit():
+        db = get_db()
+        cursor = db.cursor(cursor_factory=RealDictCursor)
+        cursor.execute(open('src/sql/add_corkboard.sql', 'r').read().format(title=add_form.title,
+                                                                            is_private=add_form.is_private,
+                                                                            password=add_form.password,
+                                                                            owner=session['logged_in_user']))
+        corkboard = cursor.fetchone()
+        return redirect(url_for('corkboard'))
     return render_template('add_corkboard.html', user=session['logged_in_user'])
 
 
