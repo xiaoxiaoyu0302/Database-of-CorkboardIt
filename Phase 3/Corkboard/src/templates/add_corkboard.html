@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>Add Corkboard</h1>
-    <form action="" method="post" novalidate class="pure-form pure-form-aligned">
+    <form action="{{url_for('add_corkboard')}}" method="post" novalidate class="pure-form pure-form-aligned">
         {{ form.hidden_tag() }}
         <fieldset>
             <div class="pure-control-group">
@@ -12,13 +12,16 @@
                 <span class="pure-form-message">{{ error }}</span>
                 {% endfor %}
             </div>
-            <!--<div class="pure-control-group">
+            <div class="pure-control-group">
                 {{ form.category.label }}
                 {{ form.category }}
-            </div>-->
+            </div>
             <div class="pure-control-group">
                 {{ form.is_private.label }}
                 {{ form.is_private }}
+                {% for error in form.is_private.errors %}
+                <span class="pure-form-message">{{ error }}</span>
+                {% endfor %}
             </div>
             <div class="pure-control-group">
                 {{ form.password.label }}

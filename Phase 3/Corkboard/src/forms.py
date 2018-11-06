@@ -11,8 +11,8 @@ class LoginForm(FlaskForm):
 class AddCorkboardForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     category = SelectField('Category', choices=[('Art','Art')])
-    is_private = RadioField('Visibility', choices=[('0', 'public'), ('1','private')])
-    password = PasswordField('Password')
+    is_private = RadioField('Visibility', choices=[('0', 'Public'), ('1','Private')], validators=[DataRequired()])
+    password = StringField('Password')
     submit = SubmitField('Add Corkboard')
 
 class PushpinSearchForm(FlaskForm):
