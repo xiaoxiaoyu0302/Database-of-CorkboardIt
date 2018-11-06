@@ -52,17 +52,17 @@ def logout():
 
 @app.route('/addcorkboard', methods=['GET', 'POST'])
 def add_corkboard():
-    add_form = AddCorkboardForm
+    add_form = AddCorkboardForm()
     if add_form.validate_on_submit():
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)
         cursor.execute(open('src/sql/add_corkboard.sql', 'r').read().format(title=add_form.title,
                                                                             is_private=add_form.is_private,
                                                                             password=add_form.password,
-                                                                            owner=session['logged_in_user']))
+                                                                            owner=session['logged_in_user']['email']))
         corkboard = cursor.fetchone()
-        return redirect(url_for('corkboard'))
-    return render_template('add_corkboard.html', user=session['logged_in_user'])
+        return redirect(url_for('index'))
+    return render_template('add_corkboard.html', form=add_form)
 
 
 @app.route('/populartags')

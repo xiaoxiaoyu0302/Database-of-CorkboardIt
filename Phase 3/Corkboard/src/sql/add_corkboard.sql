@@ -11,5 +11,6 @@ VALUES
         '{title}',
         '{is_private}',
         '{password}',
-        '{owner}'
+        '{owner}',
+        'Art'
      );

@@ -10,7 +10,7 @@ class LoginForm(FlaskForm):
 
 class AddCorkboardForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
-    #category = SelectField()
+    category = SelectField('Category', choices=[('Art','Art')])
     is_private = RadioField('Visibility', choices=[('0', 'public'), ('1','private')])
     password = PasswordField('Password')
     submit = SubmitField('Add Corkboard')
