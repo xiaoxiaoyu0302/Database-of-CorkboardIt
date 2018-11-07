@@ -18,7 +18,7 @@
             </div>
             <div class="pure-control-group">
                 {{ form.is_private.label }}
-                {{ form.is_private }}
+                {{ form.is_private(class_="pure-radio") }}
                 {% for error in form.is_private.errors %}
                 <span class="pure-form-message">{{ error }}</span>
                 {% endfor %}
