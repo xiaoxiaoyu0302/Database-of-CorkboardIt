@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Corkboard: {{ corkboard.title }}</h1>
+    
+
+    <h2>Owner</h2>
+    <div><p>{{ corkboard.owner }}</p></div>
+    
+    <h2>Category</h2>
+    <div><p>{{ corkboard.category }}</p></div>
+    
+    <h2>PushPins</h2>
+    {% for pushipin in pushipins %}
+    <div><p>{{ pushipin.id }}</a></p></div>
+    {% endfor %}
+    
+{% endblock %}

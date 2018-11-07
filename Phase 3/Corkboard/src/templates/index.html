@@ -7,13 +7,13 @@
     <h2>Recent Corkboard Updates</h2>
     <a href="{{ url_for('get_popular_tags') }}"><input type="button" value="Popular Tags"></a>
     {% for update in updates %}
-    <div><p>{{ update.title }}</p></div>
+    <div><p><a href="{{ url_for('get_corkboard') }}/{{ update.id }}">{{ update.title }}</a></p></div>
     {% endfor %}
 
     <h2>My Corkboards</h2>
     <a href="{{ url_for('add_corkboard') }}"><input type="button" value="Add Corkboard"></a>
     {% for corkboard in corkboards %}
-    <div><p>{{ corkboard.title }}</p></div>
+    <div><p><a href="{{ url_for('get_corkboard') }}/{{ corkboard.id }}">{{ corkboard.title }}</a></p></div>
     {% endfor %}
     <hr>
 
