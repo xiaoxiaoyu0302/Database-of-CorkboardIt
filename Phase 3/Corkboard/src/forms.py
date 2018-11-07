@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, RadioField, PasswordField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, RadioField
 from wtforms.validators import DataRequired
-
 
 class LoginForm(FlaskForm):
     email = StringField('E-Mail Address', validators=[DataRequired()])
@@ -10,7 +9,7 @@ class LoginForm(FlaskForm):
 
 class AddCorkboardForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
-    category = SelectField('Category', choices=[('Art','Art')])
+    category = SelectField('Category', choices=[])
     is_private = RadioField('Visibility', choices=[('0', 'Public'), ('1','Private')], validators=[DataRequired()])
     password = StringField('Password')
     submit = SubmitField('Add Corkboard')

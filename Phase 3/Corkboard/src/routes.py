@@ -50,9 +50,20 @@ def logout():
     return redirect(url_for('login'))
 
 
+def get_category_choices():
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+
+    cursor.execute(open('src/sql/get_categories.sql').read())
+    return cursor.fetchall()
+
 @app.route('/add_corkboard', methods=['GET', 'POST'])
 def add_corkboard():
     add_form = AddCorkboardForm()
+
+    for option in get_category_choices():
+        add_form.category.choices += [(option['category_name'], option['category_name'])]
+
     if add_form.validate_on_submit():
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)
