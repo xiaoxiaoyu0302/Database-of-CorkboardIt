@@ -27,6 +27,6 @@ FROM
 INNER JOIN
 	"User"
 ON
-	"User".email = "Corkboard".user_email
+	"User".email = "Corkboard".owner
 WHERE
     "Corkboard".id = %s;
