@@ -97,7 +97,7 @@ def get_corkboard_by_id(corkboard_id):
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
 
-    cursor.execute(open('src/sql/get_corkboard_by_id.sql').read(), corkboard_id)
+    cursor.execute(open('src/sql/get_corkboard_by_id.sql').read(), (corkboard_id,corkboard_id,corkboard_id))
     corkboard = cursor.fetchone()
     
     cursor.execute(open('src/sql/get_pushpins_by_corkboard_id.sql').read(), corkboard_id)
