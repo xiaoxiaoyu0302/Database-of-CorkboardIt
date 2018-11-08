@@ -5,6 +5,7 @@ from app import get_db
 from psycopg2.extras import RealDictCursor
 
 
+
 @app.route('/')
 @app.route('/index', methods=['GET', 'POST'])
 def index():
@@ -72,7 +73,6 @@ def add_corkboard():
                                                                             password=add_form.password.data,
                                                                             owner=session['logged_in_user']['email'],
                                                                             category=add_form.category.data))
-        #corkboard = cursor.fetchone()
         db.commit()
         return redirect(url_for('index'))
     return render_template('add_corkboard.html', form=add_form)
@@ -81,6 +81,16 @@ def add_corkboard():
 @app.route('/populartags')
 def get_popular_tags():
     return render_template('popular_tags.html', user=session['logged_in_user'])
+
+@app.route('/popularsites')
+def get_popular_sites():
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+
+    cursor.execute(open('src/sql/popular_sites.sql').read())
+    popular_sites = cursor.fetchall()
+
+    return render_template('popular_sites.html', popular_sites=popular_sites)
 
 @app.route('/corkboard')
 def get_corkboard(corkboard_id):
