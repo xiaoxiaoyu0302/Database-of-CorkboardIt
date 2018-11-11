@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Add Pushpin</h1>
+    <form action="{{url_for('get_corkboard')}}/{{corkboard_id}}" method="post" novalidate class="pure-form pure-form-aligned">
+        {{ form.hidden_tag() }}
+        <fieldset>
+            <div class="pure-control-group">
+                {{ form.description.label }}
+                {{ form.description(size=32) }}
+            </div>
+            <div class="pure-control-group">
+                {{ form.image_link.label }}
+                {{ form.image_link(size=32) }}
+            </div>
+            <div class="pure-control-group">
+                 {{ form.submit(class_="pure-button pure-button-primary") }}
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, session
 from src import app
-from src.forms import LoginForm, PushpinSearchForm, AddCorkboardForm
+from src.forms import LoginForm, PushpinSearchForm, AddCorkboardForm, AddPushPinForm
 from app import get_db
 from psycopg2.extras import RealDictCursor
 
@@ -113,4 +113,13 @@ def get_corkboard_by_id(corkboard_id):
     cursor.execute(open('src/sql/get_pushpins_by_corkboard_id.sql').read(), corkboard_id)
     pushpins = cursor.fetchall()
     
-    return render_template('corkboard.html', corkboard=corkboard, pushpins= pushpins, user=session['logged_in_user'])
+    return render_template('corkboard.html', corkboard=corkboard, pushpins= pushpins, 
+                            corkboard_id = corkboard_id, user=session['logged_in_user'])
+    
+@app.route('/corkboard/<corkboard_id>/add_pushpin', methods=['GET', 'POST'])
+def add_pushpin(corkboard_id):
+    add_form = AddPushPinForm()
+
+    if add_form.validate_on_submit():
+        return redirect(url_for('get_corkboard')+'/'+corkboard_id)
+    return render_template('add_pushpin.html', corkboard_id=corkboard_id, form=add_form)

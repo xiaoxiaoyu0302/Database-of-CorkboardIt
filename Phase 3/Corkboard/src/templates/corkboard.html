@@ -10,8 +10,11 @@
     <hr/>
 
     <h2>PushPins</h2>
-    {% for pushipin in pushipins %}
-        <div>{{ pushipin.id }}</div>
+    
+    <a href="{{ url_for('get_corkboard') }}/{{ corkboard_id }}/add_pushpin"><input type="button" value="Add Pushpin"></a>
+    
+    {% for pushpin in pushpins %}
+        <div>{{ pushpin.id }}</div>
     {% endfor %}
 
     <hr/>
