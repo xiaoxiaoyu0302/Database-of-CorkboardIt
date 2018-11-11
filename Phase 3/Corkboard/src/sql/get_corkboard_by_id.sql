@@ -1,6 +1,7 @@
 SELECT
 	"Corkboard".title,
 	"Corkboard".category,
+	"Corkboard".owner,
 	CONCAT( "User".first_name, ' ' , "User".last_name) AS owner_name,
 	(
 		SELECT

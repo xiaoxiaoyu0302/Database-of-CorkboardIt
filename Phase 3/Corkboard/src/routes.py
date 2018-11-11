@@ -114,7 +114,11 @@ def get_corkboard_by_id(corkboard_id):
     cursor.execute(open('src/sql/get_pushpins_by_corkboard_id.sql').read().format(corkboard_id=corkboard_id))
     pushpins = cursor.fetchall()
     
-    return render_template('corkboard.html', corkboard=corkboard, pushpins= pushpins, 
+    permission = session['logged_in_user']['email'] == corkboard['owner']
+    
+    print(permission)
+    
+    return render_template('corkboard.html', corkboard=corkboard, pushpins= pushpins, permission = permission,
                             corkboard_id = corkboard_id, user=session['logged_in_user'])
     
 @app.route('/corkboard/<corkboard_id>/add_pushpin', methods=['GET', 'POST'])
