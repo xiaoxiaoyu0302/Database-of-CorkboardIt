@@ -3,6 +3,7 @@ from src import app
 from src.forms import LoginForm, PushpinSearchForm, AddCorkboardForm, AddPushPinForm
 from app import get_db
 from psycopg2.extras import RealDictCursor
+from datetime import datetime
 
 
 
@@ -93,7 +94,7 @@ def get_popular_sites():
     return render_template('popular_sites.html', popular_sites=popular_sites)
 
 @app.route('/corkboard')
-def get_corkboard(corkboard_id):
+def get_corkboard():
     if 'logged_in_user' not in session:
         return redirect(url_for('login'))
     
@@ -107,10 +108,10 @@ def get_corkboard_by_id(corkboard_id):
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
 
-    cursor.execute(open('src/sql/get_corkboard_by_id.sql').read(), (corkboard_id,corkboard_id,corkboard_id))
+    cursor.execute(open('src/sql/get_corkboard_by_id.sql').read().format(corkboard_id=corkboard_id))
     corkboard = cursor.fetchone()
     
-    cursor.execute(open('src/sql/get_pushpins_by_corkboard_id.sql').read(), corkboard_id)
+    cursor.execute(open('src/sql/get_pushpins_by_corkboard_id.sql').read().format(corkboard_id=corkboard_id))
     pushpins = cursor.fetchall()
     
     return render_template('corkboard.html', corkboard=corkboard, pushpins= pushpins, 
@@ -121,5 +122,12 @@ def add_pushpin(corkboard_id):
     add_form = AddPushPinForm()
 
     if add_form.validate_on_submit():
+        db = get_db()
+        cursor = db.cursor(cursor_factory=RealDictCursor)
+        cursor.execute(open('src/sql/add_pushpin.sql', 'r').read().format(description=add_form.description.data,
+                                                                            image_link=add_form.image_link.data,
+                                                                            time_added=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                                                                            corkboard_id=corkboard_id))
+        db.commit()
         return redirect(url_for('get_corkboard')+'/'+corkboard_id)
     return render_template('add_pushpin.html', corkboard_id=corkboard_id, form=add_form)

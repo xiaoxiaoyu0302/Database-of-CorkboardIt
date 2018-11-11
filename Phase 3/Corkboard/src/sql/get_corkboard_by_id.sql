@@ -8,7 +8,7 @@ SELECT
 		FROM
 			"Pushpin"
 		WHERE
-			"Pushpin".corkboard_id = %s
+			"Pushpin".corkboard_id = '{corkboard_id}'
 		GROUP BY
 			"Pushpin".time_added
 		ORDER BY
@@ -21,7 +21,7 @@ SELECT
 		FROM
 			"Watched"
 		WHERE
-			"Watched".corkboard_id = %s
+			"Watched".corkboard_id = '{corkboard_id}'
 	) AS watcher_count
 FROM
 	"Corkboard"
@@ -30,4 +30,4 @@ INNER JOIN
 ON
 	"User".email = "Corkboard".owner
 WHERE
-    "Corkboard".id = %s;
+    "Corkboard".id = '{corkboard_id}';
