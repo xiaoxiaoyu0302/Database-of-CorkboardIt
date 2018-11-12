@@ -1,5 +1,6 @@
 SELECT
-    *
+    id,
+    image_link
 FROM
     "Pushpin"
 WHERE

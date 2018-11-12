@@ -19,6 +19,6 @@ class PushpinSearchForm(FlaskForm):
     submit = SubmitField('Search Pushpins')
 
 class AddPushPinForm(FlaskForm):
-    description = StringField('Description')
-    image_link = StringField('Image link')
-    submit = SubmitField('Add Corkboard')
+    description = StringField('Description', validators=[DataRequired()])
+    image_link = StringField('Image link', validators=[DataRequired()])
+    submit = SubmitField('Add Pushpin')

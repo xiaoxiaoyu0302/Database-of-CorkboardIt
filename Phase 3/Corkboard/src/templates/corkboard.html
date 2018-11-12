@@ -12,11 +12,11 @@
     <h2>PushPins</h2>
     
     {% if permission %}
-        <a href="{{ url_for('get_corkboard') }}/{{ corkboard_id }}/add_pushpin"><input type="button" value="Add Pushpin"></a>
+        <a href="{{ url_for('get_corkboard') }}/{{ corkboard_id }}/add_pushpin"><input type="button" value="Add Pushpin"></a><br/>
     {% endif %}
 
     {% for pushpin in pushpins %}
-        <div>{{ pushpin.id }}</div>
+        <img class="pure-img" src="{{ pushpin.image_link }}" style="width:100px;height:300px;">
     {% endfor %}
 
     <hr/>
