@@ -31,7 +31,11 @@
 	<div>
         Number of Watchers: {{ corkboard.watcher_count }}
         {% if not permission %}
-            <a href="{{ url_for('watch_corkboard') }}"><label><input type="button" value="Watch Corkboard"></label></a><br/>
+            {% if is_watched %}
+                <a href="{{ url_for('watch_corkboard') }}"><input type="button" value="Unwatch"></a>
+            {% else %}
+                <a href="{{ url_for('watch_corkboard') }}"><input type="button" value="Watch"></a>
+            {% endif %}
         {% endif %}
     </div>
 {% endblock %}

@@ -117,9 +117,12 @@ def get_corkboard_by_id(corkboard_id):
     permission = session['logged_in_user']['email'] == corkboard['owner']
 
     session['current_corkboard'] = corkboard_id
+    cursor.execute(open('src/sql/is_watched.sql', 'r').read().format(user_email=session['logged_in_user']['email'],
+                                                                          corkboard_id=session['current_corkboard']))
+    is_watched = cursor.fetchone()['is_watched']
 
     return render_template('corkboard.html', corkboard=corkboard, pushpins= pushpins, permission = permission,
-                           corkboard_id = corkboard_id, user=session['logged_in_user'])
+                           is_watched=is_watched, corkboard_id = corkboard_id, user=session['logged_in_user'])
     
 @app.route('/corkboard/<corkboard_id>/add_pushpin', methods=['GET', 'POST'])
 def add_pushpin(corkboard_id):

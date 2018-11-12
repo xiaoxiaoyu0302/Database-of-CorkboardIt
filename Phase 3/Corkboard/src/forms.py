@@ -22,3 +22,6 @@ class AddPushPinForm(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     image_link = StringField('Image link', validators=[DataRequired()])
     submit = SubmitField('Add Pushpin')
+
+class WatchForm(FlaskForm):
+    submit = SubmitField()
