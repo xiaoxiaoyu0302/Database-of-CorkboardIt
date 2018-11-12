@@ -115,11 +115,11 @@ def get_corkboard_by_id(corkboard_id):
     pushpins = cursor.fetchall()
     
     permission = session['logged_in_user']['email'] == corkboard['owner']
-    
-    print(permission)
-    
+
+    session['current_corkboard'] = corkboard_id
+
     return render_template('corkboard.html', corkboard=corkboard, pushpins= pushpins, permission = permission,
-                            corkboard_id = corkboard_id, user=session['logged_in_user'])
+                           corkboard_id = corkboard_id, user=session['logged_in_user'])
     
 @app.route('/corkboard/<corkboard_id>/add_pushpin', methods=['GET', 'POST'])
 def add_pushpin(corkboard_id):
@@ -135,3 +135,20 @@ def add_pushpin(corkboard_id):
         db.commit()
         return redirect(url_for('get_corkboard')+'/'+corkboard_id)
     return render_template('add_pushpin.html', corkboard_id=corkboard_id, form=add_form)
+
+@app.route('/watch_corkboard')
+def watch_corkboard():
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+    cursor.execute(open('src/sql/is_watched.sql', 'r').read().format(user_email=session['logged_in_user']['email'],
+                                                                          corkboard_id=session['current_corkboard']))
+    is_watched = cursor.fetchone()['is_watched']
+    if is_watched:
+        query = 'src/sql/unwatch_corkboard.sql'
+    else:
+        query = 'src/sql/watch_corkboard.sql'
+
+    cursor.execute(open(query, 'r').read().format(user_email=session['logged_in_user']['email'],
+                                                                          corkboard_id=session['current_corkboard']))
+    db.commit()
+    return redirect(url_for('get_corkboard')+'/'+ session['current_corkboard'])

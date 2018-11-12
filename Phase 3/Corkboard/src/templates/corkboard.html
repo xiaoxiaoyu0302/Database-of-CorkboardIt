@@ -1,12 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div>
-        <h1>{{ corkboard.title }}</h1>
-        <h3>Owned By: {{ corkboard.owner_name }}</h3>
-        <h3>Last Updated: {{ corkboard.last_update }}</h3>
-        <h3>Category: {{ corkboard.category }}</h3>
-    </div>
+    <table class="pure-table">
+        <tbody>
+            <tr>
+                <td>
+                    <h1>{{ corkboard.title }}</h1>
+                    <h3>Owned By: {{ corkboard.owner_name }}</h3>
+                </td>
+                <td>
+                    <h3>Last Updated: {{ corkboard.last_update }}</h3>
+                    <h3>Category: {{ corkboard.category }}</h3>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <hr/>
 
     <h2>PushPins</h2>
@@ -20,7 +28,10 @@
     {% endfor %}
 
     <hr/>
-	<p>
+	<div>
         Number of Watchers: {{ corkboard.watcher_count }}
-    </p>
+        {% if not permission %}
+            <a href="{{ url_for('watch_corkboard') }}"><label><input type="button" value="Watch Corkboard"></label></a><br/>
+        {% endif %}
+    </div>
 {% endblock %}
