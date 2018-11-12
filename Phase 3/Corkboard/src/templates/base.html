@@ -8,12 +8,14 @@
     <title>No title entered.</title>
     {% endif %}
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/main.css') }}">
 </head>
 <body>
 
     <div class="pure-menu pure-menu-horizontal">
-        {% if user %}
         <ul class="pure-menu-list">
+            <li class="pure-menu-item pure-menu-heading">POP THE CORK</li>
+        {% if user %}
             <li class="pure-menu-item"><a href="{{ url_for('index') }}" class="pure-menu-heading pure-menu-link">Home</a></li>
             <li class="pure-menu-item"><a href="{{ url_for('logout') }}" class="pure-menu-heading pure-menu-link">Logout</a></li>
         </ul>

@@ -81,7 +81,12 @@ def add_corkboard():
 
 @app.route('/populartags')
 def get_popular_tags():
-    return render_template('popular_tags.html', user=session['logged_in_user'])
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+    cursor.execute(open('src/sql/popular_tags.sql').read())
+    tags = cursor.fetchall()
+
+    return render_template('popular_tags.html', user=session['logged_in_user'], tags=tags)
 
 
 @app.route('/popularsites')

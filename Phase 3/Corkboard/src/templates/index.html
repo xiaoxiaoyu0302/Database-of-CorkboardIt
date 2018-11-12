@@ -11,7 +11,7 @@
         <h3>
             <a href="{{ url_for('get_corkboard') }}/{{ update.id }}">{{ update.title }}</a>
             {% if update.is_private == '1' %}
-            <em>PRIVATE</em>
+            <span class="private-corkboard">Private</span>
             {% endif %}
         </h3>
         <br>
@@ -31,7 +31,7 @@
             </b>
             ({{ corkboard.pushpin_count }} Pushpins)
             {% if corkboard.is_private == '1' %}
-            <em>PRIVATE</em>
+            <span class="private-corkboard">Private</span>
             {% endif %}
         </p>
     </div>
