@@ -7,7 +7,16 @@
     <h2>Recent Corkboard Updates</h2>
     <a href="{{ url_for('get_popular_tags') }}"><input type="button" value="Popular Tags"></a>
     {% for update in updates %}
-    <div><p><a href="{{ url_for('get_corkboard') }}/{{ update.id }}">{{ update.title }}</a></p></div>
+    <div>
+        <h3>
+            <a href="{{ url_for('get_corkboard') }}/{{ update.id }}">{{ update.title }}</a>
+            {% if update.is_private == '1' %}
+            <em>PRIVATE</em>
+            {% endif %}
+        </h3>
+        <br>
+        Updated by: <b>{{ update.name }}</b> on <b>{{ update.most_recent_update }}</b>
+    </div>
     {% endfor %}
 
     <h2>My Corkboards</h2>

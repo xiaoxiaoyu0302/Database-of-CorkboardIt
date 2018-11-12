@@ -15,7 +15,7 @@ def index():
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
 
-    cursor.execute(open('src/sql/recent_updates.sql').read())
+    cursor.execute(open('src/sql/recent_updates.sql').read().format(email=session['logged_in_user']['email']))
     updates = cursor.fetchall()
 
     cursor.execute(open('src/sql/owned_corkboards.sql').read().format(email=session['logged_in_user']['email']))
