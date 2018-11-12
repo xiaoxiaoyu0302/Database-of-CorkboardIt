@@ -6,7 +6,6 @@ from psycopg2.extras import RealDictCursor
 from datetime import datetime
 
 
-
 @app.route('/')
 @app.route('/index', methods=['GET', 'POST'])
 def index():
@@ -59,6 +58,7 @@ def get_category_choices():
     cursor.execute(open('src/sql/get_categories.sql').read())
     return cursor.fetchall()
 
+
 @app.route('/add_corkboard', methods=['GET', 'POST'])
 def add_corkboard():
     add_form = AddCorkboardForm()
@@ -83,6 +83,7 @@ def add_corkboard():
 def get_popular_tags():
     return render_template('popular_tags.html', user=session['logged_in_user'])
 
+
 @app.route('/popularsites')
 def get_popular_sites():
     db = get_db()
@@ -93,13 +94,15 @@ def get_popular_sites():
 
     return render_template('popular_sites.html', popular_sites=popular_sites)
 
+
 @app.route('/corkboard')
 def get_corkboard():
     if 'logged_in_user' not in session:
         return redirect(url_for('login'))
     
     return render_template('corkboard.html', user=session['logged_in_user'])
-    
+
+
 @app.route('/corkboard/<corkboard_id>', methods=['GET', 'POST'])
 def get_corkboard_by_id(corkboard_id):
     if 'logged_in_user' not in session:
@@ -123,7 +126,8 @@ def get_corkboard_by_id(corkboard_id):
 
     return render_template('corkboard.html', corkboard=corkboard, pushpins= pushpins, permission = permission,
                            is_watched=is_watched, corkboard_id = corkboard_id, user=session['logged_in_user'])
-    
+
+
 @app.route('/corkboard/<corkboard_id>/add_pushpin', methods=['GET', 'POST'])
 def add_pushpin(corkboard_id):
     add_form = AddPushPinForm()
@@ -138,6 +142,7 @@ def add_pushpin(corkboard_id):
         db.commit()
         return redirect(url_for('get_corkboard')+'/'+corkboard_id)
     return render_template('add_pushpin.html', corkboard_id=corkboard_id, form=add_form)
+
 
 @app.route('/watch_corkboard')
 def watch_corkboard():

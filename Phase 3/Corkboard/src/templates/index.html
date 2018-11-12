@@ -13,7 +13,19 @@
     <h2>My Corkboards</h2>
     <a href="{{ url_for('add_corkboard') }}"><input type="button" value="Add Corkboard"></a>
     {% for corkboard in corkboards %}
-    <div><p><a href="{{ url_for('get_corkboard') }}/{{ corkboard.id }}">{{ corkboard.title }}</a></p></div>
+    <div>
+        <p>
+            <b>
+                <a href="{{ url_for('get_corkboard') }}/{{ corkboard.id }}">
+                    {{ corkboard.title }}
+                </a>
+            </b>
+            ({{ corkboard.pushpin_count }} Pushpins)
+            {% if corkboard.is_private == '1' %}
+            <em>PRIVATE</em>
+            {% endif %}
+        </p>
+    </div>
     {% endfor %}
     <hr/>
     <div><a href="{{ url_for('get_popular_sites') }}"><input type="button" value="View Popular Sites"></a></div>
