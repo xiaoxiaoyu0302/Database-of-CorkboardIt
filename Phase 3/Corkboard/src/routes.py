@@ -175,3 +175,28 @@ def search_results():
     input_messages = json.loads(request.args['messages'])
     return render_template('search_results.html', query=input_messages['query'],
                            results=input_messages['results'], user=session['logged_in_user'])
+
+@app.route('/corkboard/<corkboard_id>/pushpin/<pushpin_id>', methods=['GET', 'POST'])
+def view_pushpin(corkboard_id, pushpin_id):
+    if 'logged_in_user' not in session:
+        return redirect(url_for('login'))
+    
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+    
+    cursor.execute(open('src/sql/get_corkboard_by_id.sql').read().format(corkboard_id=corkboard_id))
+    corkboard = cursor.fetchone()
+    
+    cursor.execute(open('src/sql/get_pushpins_by_pushpin_id.sql').read().format(pushpin_id=pushpin_id))
+    pushpin = cursor.fetchone()
+    pushpin['time_added'] = str(pushpin['time_added'])
+    
+    cursor.execute(open('src/sql/get_tags_for_pushpin.sql').read().format(pushpin_id=pushpin_id))
+    tag_texts = cursor.fetchall()
+    text = ''
+    for t in tag_texts:
+        text += str(t['tag_text']) + ', '
+    tags = text[:-2]
+    
+    return render_template('view_pushpin.html', corkboard=corkboard, pushpin=pushpin, tags = tags,
+                           corkboard_id=corkboard_id)
