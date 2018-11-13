@@ -1,26 +1,20 @@
-{% extends "base.html" %}
-
-{% block content %}
-    <h1>Popular Sites</h1>
-    <hr/>
-    <table class="pure-table pure-table-bordered">
-        <thead>
-            <tr>
-                <th>Site</th>
-                <th>Pushpins</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for site in popular_sites %}
-                <tr>
-                    <td>
-                        {{ site.site_name }}
-                    </td>
-                    <td>
-                        {{ site.site_count }}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{% extends "base.html" %} {% block content %}
+<h1>Popular Sites</h1>
+<hr />
+<table class="pure-table pure-table-bordered">
+	<thead>
+		<tr>
+			<th>Site</th>
+			<th>Pushpins</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for site in popular_sites %}
+		<tr>
+			<td>{{ site.site_name }}</td>
+			<td>{{ site.site_count }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
 {% endblock %}

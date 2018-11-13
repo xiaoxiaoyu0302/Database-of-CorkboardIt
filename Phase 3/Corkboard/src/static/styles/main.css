@@ -46,3 +46,14 @@ body {
 .content-container {
 	margin-bottom: 40px;
 }
+
+/* Corkboards */
+.corkboard-pushpin-container {
+	padding: 10px;
+}
+
+.pushpin-container img {
+	padding: 5px;
+	display: block;
+	margin: auto;
+}

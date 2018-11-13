@@ -1,41 +1,53 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<table class="pure-table">
+	<tbody>
+		<tr>
+			<td>
+				<h1>{{ corkboard.title }}</h1>
+				<h3>Owned By: {{ corkboard.owner_name }}</h3>
+			</td>
+			<td>
+				<h3>Last Updated: {{ corkboard.last_update }}</h3>
+				<h3>Category: {{ corkboard.category }}</h3>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<hr />
 
-{% block content %}
-    <table class="pure-table">
-        <tbody>
-            <tr>
-                <td>
-                    <h1>{{ corkboard.title }}</h1>
-                    <h3>Owned By: {{ corkboard.owner_name }}</h3>
-                </td>
-                <td>
-                    <h3>Last Updated: {{ corkboard.last_update }}</h3>
-                    <h3>Category: {{ corkboard.category }}</h3>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <hr/>
+<h2>PushPins</h2>
 
-    <h2>PushPins</h2>
-    
-    {% if permission %}
-        <a href="{{ url_for('get_corkboard') }}/{{ corkboard_id }}/add_pushpin"><input type="button" value="Add Pushpin"></a><br/>
-    {% endif %}
+{% if permission %}
+<a href="{{ url_for('get_corkboard') }}/{{ corkboard_id }}/add_pushpin"
+	><input
+		class="pure-button pure-button-primary"
+		type="button"
+		value="Add Pushpin"/></a
+><br />
+{% endif %}
+<div class="pure-g corkboard-pushpin-container">
+	{% for pushpin in pushpins %}
+	<div class="pure-u-1-3 pushpin-container">
+		<img
+			class="pure-img"
+			src="{{ pushpin.image_link }}"
+			style="width:100px;height:300px;"
+		/>
+	</div>
+	{% endfor %}
+</div>
 
-    {% for pushpin in pushpins %}
-        <img class="pure-img" src="{{ pushpin.image_link }}" style="width:100px;height:300px;">
-    {% endfor %}
-
-    <hr/>
-	<div>
-        Number of Watchers: {{ corkboard.watcher_count }}
-        {% if not permission %}
-            {% if is_watched %}
-                <a href="{{ url_for('watch_corkboard') }}"><input type="button" value="Unwatch"></a>
-            {% else %}
-                <a href="{{ url_for('watch_corkboard') }}"><input type="button" value="Watch"></a>
-            {% endif %}
-        {% endif %}
-    </div>
+<hr />
+<div>
+	Number of Watchers: {{ corkboard.watcher_count }} {% if not permission %} {%
+	if is_watched %}
+	<a href="{{ url_for('watch_corkboard') }}"
+		><input type="button" value="Unwatch"
+	/></a>
+	{% else %}
+	<a href="{{ url_for('watch_corkboard') }}"
+		><input type="button" value="Watch"
+	/></a>
+	{% endif %} {% endif %}
+</div>
 {% endblock %}
