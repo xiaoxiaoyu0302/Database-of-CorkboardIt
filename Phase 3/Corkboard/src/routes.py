@@ -25,9 +25,7 @@ def index():
     search_form = PushpinSearchForm()
     if search_form.validate_on_submit():
         query = search_form.search.data
-        cursor.execute(open('src/sql/search_pushpins.sql').read().format(query=query))
-        results = cursor.fetchall()
-        return redirect(url_for('search_results', messages=json.dumps({"query": query, "results": results})))
+        return redirect(url_for('search_results', query=query))
     return render_template('index.html', updates=updates, corkboards=corkboards, user=session['logged_in_user'],
                            form=search_form)
 
@@ -172,9 +170,13 @@ def watch_corkboard():
 
 @app.route('/search_results')
 def search_results():
-    input_messages = json.loads(request.args['messages'])
-    return render_template('search_results.html', query=input_messages['query'],
-                           results=input_messages['results'], user=session['logged_in_user'])
+    query = request.args.get('query')
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+    cursor.execute(open('src/sql/search_pushpins.sql').read().format(query=query))
+    results = cursor.fetchall()
+    return render_template('search_results.html', query=query,
+                        results=results, user=session['logged_in_user'])        
 
 @app.route('/corkboard/<corkboard_id>/pushpin/<pushpin_id>', methods=['GET', 'POST'])
 def view_pushpin(corkboard_id, pushpin_id):

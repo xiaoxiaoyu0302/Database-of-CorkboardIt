@@ -1,20 +1,26 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<h1>Popular Tags</h1>
+<p>
+	View the most popular tags here! Click a tag to execute a search for
+	Pushpins with that tag.
+</p>
+<table class="pure-table pure-table-bordered">
+	<thead>
+		<th>Tag</th>
+		<th>Pushpins</th>
+		<th>Unique Corkboards</th>
+	</thead>
+	{% for tag in tags %}
+	<tr>
+		<td>
+			<a href="{{ url_for('search_results', query=[tag.tag_text]) }}">{{
+				tag.tag_text
+			}}</a>
+		</td>
+		<td>{{ tag.pushpin_count }}</td>
+		<td>{{ tag.distinct_boards }}</td>
+	</tr>
+	{% endfor %}
+</table>
 
-{% block content %}
-    <h1>Popular Tags</h1>
-    <p>View the most popular tags here! Click a tag to execute a search for Pushpins with that tag.</p>
-    <table class="pure-table pure-table-bordered">
-        <thead>
-            <th>Tag</th>
-            <th>Pushpins</th>
-            <th>Unique Corkboards</th>
-        </thead>
-        {% for tag in tags %}
-        <tr>
-            <td>{{ tag.tag_text }}</td>
-            <td>{{ tag.pushpin_count }}</td>
-            <td>{{ tag.distinct_boards }}</td>
-        </tr>
-        {% endfor %}
-    </table>
 {% endblock %}
