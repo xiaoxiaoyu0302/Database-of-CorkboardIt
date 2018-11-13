@@ -3,7 +3,7 @@ INSERT INTO "Pushpin"
         description,
         image_link,
         time_added,
-        corkboard_id,
+        corkboard_id
     )
 VALUES
     (
