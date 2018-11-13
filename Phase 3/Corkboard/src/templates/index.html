@@ -20,10 +20,10 @@
 				<a href="{{ url_for('get_corkboard') }}/{{ update.id }}">
 					{{ update.title }}
 				</a>
+				{% if update.is_private == '1' %}
+				<span class="private-corkboard">Private</span> {% endif %}
 			</h3>
-			{% if update.is_private == '1' %}
-			<span class="private-corkboard">Private</span> {% endif %} Updated
-			by <b>{{ update.name }}</b> on
+			Updated by <b>{{ update.name }}</b> on
 			<b>{{ update.most_recent_update }}</b>
 		</div>
 		{% endfor %}
