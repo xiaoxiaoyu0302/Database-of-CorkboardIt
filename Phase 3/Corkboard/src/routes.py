@@ -205,8 +205,14 @@ def view_pushpin(corkboard_id, pushpin_id):
     if not cursor.fetchone():
         liked = False
 
+    permission = corkboard['owner'] != session['logged_in_user']['email']
+
+    cursor.execute(open('src/sql/get_all_likes.sql').read().format(pushpin_id=pushpin_id))
+    likes = cursor.fetchall()
+
     return render_template('view_pushpin.html', corkboard=corkboard, pushpin=pushpin, tags = tags,
-                           corkboard_id=corkboard_id, liked=liked)
+                           corkboard_id=corkboard_id, liked=liked, user=session['logged_in_user'], permission=permission,
+                           likes=likes)
 
 @app.route('/like_unlike')
 def like_unlike_pushpin():
