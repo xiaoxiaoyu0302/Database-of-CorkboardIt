@@ -1,53 +1,78 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<h1>Welcome, {{ user.first_name }} {{ user.last_name }}!</h1>
 
-{% block content %}
-    <h1>Welcome, {{ user.first_name }} {{ user.last_name }}!</h1>
-    <hr>
+<!-- Recent Updates -->
+<div id="recent-updates">
+	<div class="subhead-container">
+		<span class="page-subhead">Recent Corkboard Updates</span>
+		<a href="{{ url_for('get_popular_tags') }}"
+			><input
+				class="pure-button pure-button-primary"
+				type="button"
+				value="Popular Tags"
+		/></a>
+	</div>
+	<hr />
+	<div class="content-container">
+		{% for update in updates %}
+		<div class="corkboard-container">
+			<h3 class="corkboard-title">
+				<a href="{{ url_for('get_corkboard') }}/{{ update.id }}">
+					{{ update.title }}
+				</a>
+			</h3>
+			{% if update.is_private == '1' %}
+			<span class="private-corkboard">Private</span> {% endif %} Updated
+			by <b>{{ update.name }}</b> on
+			<b>{{ update.most_recent_update }}</b>
+		</div>
+		{% endfor %}
+	</div>
+</div>
 
-    <h2>Recent Corkboard Updates</h2>
-    <a href="{{ url_for('get_popular_tags') }}"><input type="button" value="Popular Tags"></a>
-    {% for update in updates %}
-    <div>
-        <h3>
-            <a href="{{ url_for('get_corkboard') }}/{{ update.id }}">{{ update.title }}</a>
-            {% if update.is_private == '1' %}
-            <span class="private-corkboard">Private</span>
-            {% endif %}
-        </h3>
-        <br>
-        Updated by: <b>{{ update.name }}</b> on <b>{{ update.most_recent_update }}</b>
-    </div>
-    {% endfor %}
+<!-- My Corkboards -->
+<div id="my-corkboards">
+	<div class="subhead-container">
+		<span class="page-subhead">My Corkboards</span>
+		<a href="{{ url_for('add_corkboard') }}"
+			><input
+				class="pure-button pure-button-primary"
+				type="button"
+				value="Add Corkboard"
+		/></a>
+	</div>
+	<hr />
+	<div class="content-container">
+		{% for corkboard in corkboards %}
+		<div class="corkboard-container">
+			<h3 class="corkboard-title">
+				<a href="{{ url_for('get_corkboard') }}/{{ corkboard.id }}">
+					{{ corkboard.title }}
+				</a>
+				{% if corkboard.is_private == '1' %}
+				<span class="private-corkboard">Private</span> {% endif %}
+			</h3>
+			({{ corkboard.pushpin_count }} Pushpins)
+		</div>
+		{% endfor %}
+	</div>
+</div>
 
-    <h2>My Corkboards</h2>
-    <a href="{{ url_for('add_corkboard') }}"><input type="button" value="Add Corkboard"></a>
-    {% for corkboard in corkboards %}
-    <div>
-        <p>
-            <b>
-                <a href="{{ url_for('get_corkboard') }}/{{ corkboard.id }}">
-                    {{ corkboard.title }}
-                </a>
-            </b>
-            ({{ corkboard.pushpin_count }} Pushpins)
-            {% if corkboard.is_private == '1' %}
-            <span class="private-corkboard">Private</span>
-            {% endif %}
-        </p>
-    </div>
-    {% endfor %}
-    <hr/>
-    <div><a href="{{ url_for('get_popular_sites') }}"><input type="button" value="View Popular Sites"></a></div>
+<!-- Popular Sites -->
+<div>
+	<a href="{{ url_for('get_popular_sites') }}"
+		><input class="pure-button" type="button" value="View Popular Sites"
+	/></a>
+</div>
 
-
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.search(size=32) }}<br>
-            {% for error in form.search.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-            {{ form.submit() }}
-        </p>
-    </form>
+<!-- Pushpin Search -->
+<form action="" method="post" novalidate>
+	{{ form.hidden_tag() }}
+	<p>
+		{{ form.search(size=32) }}<br />
+		{% for error in form.search.errors %}
+		<span style="color: red;">{{ error }}</span> {% endfor %}
+		{{ form.submit() }}
+	</p>
+</form>
 {% endblock %}
