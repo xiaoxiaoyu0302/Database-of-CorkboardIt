@@ -14,6 +14,10 @@
                 {{ form.image_link(size=32) }}
             </div>
             <div class="pure-control-group">
+                {{ form.tags.label }}
+                {{ form.tags(size=32) }}
+            </div>
+            <div class="pure-control-group">
                  {{ form.submit(class_="pure-button pure-button-primary") }}
             </div>
         </fieldset>

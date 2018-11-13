@@ -142,11 +142,20 @@ def add_pushpin(corkboard_id):
     if add_form.validate_on_submit():
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)
+        time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         cursor.execute(open('src/sql/add_pushpin.sql', 'r').read().format(description=add_form.description.data,
                                                                             image_link=add_form.image_link.data,
-                                                                            time_added=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                                                                            time_added=time_now,
                                                                             corkboard_id=corkboard_id))
         db.commit()
+        cursor.execute(open('src/sql/get_pushpin_id_after_commit.sql').read().format(corkboard_id=corkboard_id,
+                                                                                     time_added=time_now))
+        pushpin_id = cursor.fetchone()['id']
+        for tag_text in str(add_form.tags.data).split(','):
+            tag_text = tag_text.strip()
+            cursor.execute(open('src/sql/add_tag.sql', 'r').read().format(pushpin_id=pushpin_id,
+                                                                          tag_text=tag_text))
+            db.commit()
         return redirect(url_for('get_corkboard')+'/'+corkboard_id)
     return render_template('add_pushpin.html', corkboard_id=corkboard_id, form=add_form)
 
