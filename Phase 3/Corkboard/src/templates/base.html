@@ -1,39 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Pop the Cork</title>
-    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="{{ url_for('static',filename='styles/main.css') }}">
-</head>
-<body>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Pop the Cork</title>
+		<link
+			href="https://fonts.googleapis.com/css?family=Quicksand"
+			rel="stylesheet"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
+			integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w"
+			crossorigin="anonymous"
+		/>
+		<!-- Custom Styles -->
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static',filename='styles/main.css') }}"
+		/>
+	</head>
+	<body>
+		<div class="pure-menu pure-menu-horizontal">
+			<ul class="pure-menu-list">
+				<li class="pure-menu-item pure-menu-heading logo">
+					<a href="{{ url_for('index') }}" class="logo-link"
+						>POP THE CORK</a
+					>
+				</li>
+			</ul>
+			{% if user %}
+			<ul class="pure-menu-list logout-button">
+				<li class="pure-menu-item pure-menu-heading">
+					<a href="{{ url_for('logout') }}" class="logo-link"
+						>Logout</a
+					>
+				</li>
+			</ul>
+			{% endif %}
+		</div>
 
-    <div class="pure-menu pure-menu-horizontal">
-        <ul class="pure-menu-list">
-            <li class="pure-menu-item pure-menu-heading">POP THE CORK</li>
-        {% if user %}
-            <li class="pure-menu-item"><a href="{{ url_for('index') }}" class="pure-menu-heading pure-menu-link">Home</a></li>
-            <li class="pure-menu-item"><a href="{{ url_for('logout') }}" class="pure-menu-heading pure-menu-link">Logout</a></li>
-        </ul>
-        {% endif %}
-    </div>
-
-    <hr>
-    <div class="pure-u-1-6"><p>&nbsp;</p></div>
-    <div class="pure-u-2-3">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <ul>
-                {% for message in messages %}
-                <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            {% endwith %}
-        {% block content %}{% endblock %}
-    </div>
-    <div class="pure-u-1-6"><p>&nbsp;</p></div>
-</body>
+		<hr class="no-margin" />
+		<div class="pure-u-1-6"><p>&nbsp;</p></div>
+		<div class="pure-u-2-3">
+			{% with messages = get_flashed_messages() %} {% if messages %}
+			<ul>
+				{% for message in messages %}
+				<li>{{ message }}</li>
+				{% endfor %}
+			</ul>
+			{% endif %} {% endwith %} {% block content %}{% endblock %}
+		</div>
+		<div class="pure-u-1-6"><p>&nbsp;</p></div>
+	</body>
 </html>

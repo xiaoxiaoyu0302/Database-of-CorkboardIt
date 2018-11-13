@@ -2,6 +2,27 @@ body {
 	font-family: 'Quicksand', sans-serif;
 }
 
+.no-margin {
+	margin: 0;
+}
+
+.logo {
+	font-weight: bold;
+	border-right: 1px gray solid;
+	cursor: pointer;
+}
+
+.logo-link,
+logo-link:visited {
+	text-decoration: none;
+	color: gray;
+	font-size: 18px;
+}
+
+.logo-link:hover {
+	color: lightgray;
+}
+
 .private-corkboard {
 	color: lightcoral;
 	font-size: 18px;
@@ -45,6 +66,10 @@ body {
 
 .content-container {
 	margin-bottom: 40px;
+}
+
+.logout-button {
+	float: right;
 }
 
 /* Corkboards */

@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block content %}
+<h1>Search Results</h1>
+<p>
+	Here are the search results for the query: <b>{{ query }}</b>
+</p>
+<table class="pure-table pure-table-bordered">
+	<thead>
+		<th>Pushpin Description</th>
+		<th>Corkboard</th>
+		<th>Owner</th>
+	</thead>
+	{% for result in results %}
+	<tr>
+		<td><a href="">{{ result.description }}</a></td>
+		<td>{{ result.title }}</td>
+		<td>{{ result.name }}</td>
+	</tr>
+	{% endfor %}
+</table>
+
+{% endblock %}

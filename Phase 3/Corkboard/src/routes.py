@@ -1,12 +1,13 @@
-from flask import render_template, flash, redirect, url_for, session
+from flask import render_template, flash, redirect, url_for, session, request
 from src import app
 from src.forms import LoginForm, PushpinSearchForm, AddCorkboardForm, AddPushPinForm
 from app import get_db
 from psycopg2.extras import RealDictCursor
 from datetime import datetime
+import json
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if 'logged_in_user' not in session:
@@ -23,7 +24,10 @@ def index():
 
     search_form = PushpinSearchForm()
     if search_form.validate_on_submit():
-        flash(search_form.search.data)
+        query = search_form.search.data
+        cursor.execute(open('src/sql/search_pushpins.sql').read().format(query=query))
+        results = cursor.fetchall()
+        return redirect(url_for('search_results', messages=json.dumps({"query": query, "results": results})))
     return render_template('index.html', updates=updates, corkboards=corkboards, user=session['logged_in_user'],
                            form=search_form)
 
@@ -165,3 +169,9 @@ def watch_corkboard():
                                                                           corkboard_id=session['current_corkboard']))
     db.commit()
     return redirect(url_for('get_corkboard')+'/'+ session['current_corkboard'])
+
+@app.route('/search_results')
+def search_results():
+    input_messages = json.loads(request.args['messages'])
+    return render_template('search_results.html', query=input_messages['query'],
+                           results=input_messages['results'], user=session['logged_in_user'])
