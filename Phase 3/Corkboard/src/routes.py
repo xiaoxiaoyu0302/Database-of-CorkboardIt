@@ -199,6 +199,29 @@ def view_pushpin(corkboard_id, pushpin_id):
     for t in tag_texts:
         text += str(t['tag_text']) + ', '
     tags = text[:-2]
-    
+
+    cursor.execute(open('src/sql/liked_or_unliked.sql').read().format(email=session['logged_in_user']['email'], pushpin_id=pushpin_id))
+    liked = True
+    if not cursor.fetchone():
+        liked = False
+
     return render_template('view_pushpin.html', corkboard=corkboard, pushpin=pushpin, tags = tags,
-                           corkboard_id=corkboard_id)
+                           corkboard_id=corkboard_id, liked=liked)
+
+@app.route('/like_unlike')
+def like_unlike_pushpin():
+    pushpin_id = request.args.get('pushpin_id')
+    corkboard_id = request.args.get('corkboard_id')
+
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+    cursor.execute(open('src/sql/liked_or_unliked.sql').read().format(email=session['logged_in_user']['email'], pushpin_id=pushpin_id))
+    if not cursor.fetchone():
+        sql = open('src/sql/like_pushpin.sql').read().format(email=session['logged_in_user']['email'], pushpin_id=pushpin_id)
+    else:
+        sql = open('src/sql/unlike_pushpin.sql').read().format(email=session['logged_in_user']['email'], pushpin_id=pushpin_id)
+
+    cursor.execute(sql)
+    db.commit()
+    return redirect(url_for('view_pushpin', corkboard_id=corkboard_id, pushpin_id=pushpin_id))
+

@@ -40,16 +40,16 @@ logo-link:visited {
 	color: whitesmoke;
 }
 
+.corkboard-title a:hover {
+	color: burlywood;
+}
+
 .corkboard-container {
 	background-color: gray;
 	border-radius: 5px;
 	padding: 12px;
 	color: whitesmoke;
 	margin-bottom: 10px;
-}
-
-.corkboard-container a:visited {
-	color: whitesmoke;
 }
 
 .page-subhead {
