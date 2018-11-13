@@ -82,3 +82,15 @@ logo-link:visited {
 	display: block;
 	margin: auto;
 }
+
+.search-container {
+	display: inline-block;
+	margin-bottom: 30px;
+}
+
+.search-input {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 18px;
+	padding: 6px;
+}

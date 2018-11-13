@@ -15,7 +15,7 @@ class AddCorkboardForm(FlaskForm):
     submit = SubmitField('Add Corkboard')
 
 class PushpinSearchForm(FlaskForm):
-    search = StringField('Search', validators=[DataRequired()])
+    search = StringField('Search', validators=[DataRequired()], render_kw={"placeholder": "Search..."})
     submit = SubmitField('Search Pushpins')
 
 class AddPushPinForm(FlaskForm):
