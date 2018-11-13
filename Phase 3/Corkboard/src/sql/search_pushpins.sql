@@ -1,5 +1,6 @@
 select
 "Pushpin".id,
+"Corkboard".id as corkboard_id,
   description,
        "Corkboard".title,
        CONCAT(first_name, ' ', last_name) as name

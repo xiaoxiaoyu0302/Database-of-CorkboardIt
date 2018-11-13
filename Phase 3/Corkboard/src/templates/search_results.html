@@ -11,7 +11,12 @@
 	</thead>
 	{% for result in results %}
 	<tr>
-		<td><a href="">{{ result.description }}</a></td>
+		<td>
+			<a
+				href="{{ url_for('view_pushpin', corkboard_id=result.corkboard_id, pushpin_id=result.id) }}"
+				>{{ result.description }}</a
+			>
+		</td>
 		<td>{{ result.title }}</td>
 		<td>{{ result.name }}</td>
 	</tr>
