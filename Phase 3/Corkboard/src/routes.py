@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, session, request
 from src import app
-from src.forms import LoginForm, PushpinSearchForm, AddCorkboardForm, AddPushPinForm
+from src.forms import LoginForm, PushpinSearchForm, AddCorkboardForm, AddPushPinForm, PrivateCorkboardForm
 from app import get_db
 from psycopg2.extras import RealDictCursor
 from datetime import datetime
@@ -115,6 +115,8 @@ def get_corkboard_by_id(corkboard_id):
     if 'logged_in_user' not in session:
         return redirect(url_for('login'))
     
+    form = PrivateCorkboardForm()
+    
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
 
@@ -130,6 +132,19 @@ def get_corkboard_by_id(corkboard_id):
     cursor.execute(open('src/sql/is_watched.sql', 'r').read().format(user_email=session['logged_in_user']['email'],
                                                                           corkboard_id=session['current_corkboard']))
     is_watched = cursor.fetchone()['is_watched']
+    
+    print("is_private: " + corkboard['is_private'])
+    
+    if form.validate_on_submit():
+        if form.pin.data != corkboard['password']:
+            flash("Unable to login. Try again.")
+        else:
+            return render_template('corkboard.html', corkboard=corkboard, pushpins= pushpins, permission = permission,
+                                  is_watched=is_watched, corkboard_id = corkboard_id, user=session['logged_in_user'])
+    
+    if corkboard['is_private'] == '1':
+        return render_template('corkboard_private.html', form = form, corkboard=corkboard, pushpins= pushpins, permission = permission,
+                               is_watched=is_watched, corkboard_id = corkboard_id, user=session['logged_in_user'])
 
     return render_template('corkboard.html', corkboard=corkboard, pushpins= pushpins, permission = permission,
                            is_watched=is_watched, corkboard_id = corkboard_id, user=session['logged_in_user'])

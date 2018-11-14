@@ -2,6 +2,8 @@ SELECT
 	"Corkboard".title,
 	"Corkboard".category,
 	"Corkboard".owner,
+	"Corkboard".is_private,
+	"Corkboard".password,
 	CONCAT( "User".first_name, ' ' , "User".last_name) AS owner_name,
 	(
 		SELECT

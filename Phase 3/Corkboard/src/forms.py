@@ -26,3 +26,7 @@ class AddPushPinForm(FlaskForm):
 
 class WatchForm(FlaskForm):
     submit = SubmitField()
+    
+class PrivateCorkboardForm(FlaskForm):
+    pin = PasswordField('PIN', validators=[DataRequired()])
+    submit = SubmitField('Login')
