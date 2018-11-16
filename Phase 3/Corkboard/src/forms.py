@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, RadioField
 from wtforms.validators import DataRequired
+from wtforms.widgets import TextArea
 
 class LoginForm(FlaskForm):
     email = StringField('E-Mail Address', validators=[DataRequired()])
@@ -30,3 +31,7 @@ class WatchForm(FlaskForm):
 class PrivateCorkboardForm(FlaskForm):
     pin = PasswordField('PIN', validators=[DataRequired()])
     submit = SubmitField('Login')
+
+class CommentForm(FlaskForm):
+    comment_text = StringField('Comment: ',validators=[DataRequired()], widget=TextArea())
+    submit = SubmitField('Post')

@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, session, request
 from src import app
-from src.forms import LoginForm, PushpinSearchForm, AddCorkboardForm, AddPushPinForm, PrivateCorkboardForm
+from src.forms import LoginForm, PushpinSearchForm, AddCorkboardForm, AddPushPinForm, PrivateCorkboardForm, CommentForm
 from app import get_db
 from psycopg2.extras import RealDictCursor
 from datetime import datetime
@@ -106,7 +106,7 @@ def get_popular_sites():
 def get_corkboard():
     if 'logged_in_user' not in session:
         return redirect(url_for('login'))
-    
+
     return render_template('corkboard.html', user=session['logged_in_user'])
 
 
@@ -114,18 +114,18 @@ def get_corkboard():
 def get_corkboard_by_id(corkboard_id):
     if 'logged_in_user' not in session:
         return redirect(url_for('login'))
-    
+
     form = PrivateCorkboardForm()
-    
+
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
 
     cursor.execute(open('src/sql/get_corkboard_by_id.sql').read().format(corkboard_id=corkboard_id))
     corkboard = cursor.fetchone()
-    
+
     cursor.execute(open('src/sql/get_pushpins_by_corkboard_id.sql').read().format(corkboard_id=corkboard_id))
     pushpins = cursor.fetchall()
-    
+
     permission = session['logged_in_user']['email'] == corkboard['owner']
 
     session['current_corkboard'] = corkboard_id
@@ -134,18 +134,18 @@ def get_corkboard_by_id(corkboard_id):
     is_watched = cursor.fetchone()['is_watched']
 
     cursor.execute(open('src/sql/is_followed.sql', 'r').read().format(user=session['logged_in_user']['email'],
-                                                                     followed_user=session['current_corkboard']['owner']))
+                                                                     followed_user=corkboard['owner']))
     is_followed = cursor.fetchone()['is_followed']
 
     print("is_private: " + corkboard['is_private'])
-    
+
     if form.validate_on_submit():
         if form.pin.data != corkboard['password']:
             flash("Unable to login. Try again.")
         else:
             return render_template('corkboard.html', corkboard=corkboard, pushpins= pushpins, permission = permission,
                                   is_watched=is_watched, corkboard_id = corkboard_id, user=session['logged_in_user'])
-    
+
     if corkboard['is_private'] == '1':
         return render_template('corkboard_private.html', form = form, corkboard=corkboard, pushpins= pushpins, permission = permission,
                                is_watched=is_watched, is_followed=is_followed, corkboard_id = corkboard_id, user=session['logged_in_user'])
@@ -200,8 +200,10 @@ def watch_corkboard():
 def follow_user():
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
+    cursor.execute(open('src/sql/get_corkboard_by_id.sql').read().format(corkboard_id=session['current_corkboard']))
+    corkboard_owner = cursor.fetchone()['owner']
     cursor.execute(open('src/sql/is_followed.sql', 'r').read().format(user=session['logged_in_user']['email'],
-                                                                          followed_user=session['current_corkboard']['owner']))
+                                                                          followed_user=corkboard_owner))
     is_followed = cursor.fetchone()['is_followed']
     if is_followed:
         query = 'src/sql/unfollow_user.sql'
@@ -209,7 +211,7 @@ def follow_user():
         query = 'src/sql/follow_user.sql'
 
     cursor.execute(open(query, 'r').read().format(user_email=session['logged_in_user']['email'],
-                                                  followed_user=session['current_corkboard']['owner']))
+                                                  followed_user=corkboard_owner))
     db.commit()
     return redirect(url_for('get_corkboard')+'/'+ session['current_corkboard'])
 
@@ -221,23 +223,23 @@ def search_results():
     cursor.execute(open('src/sql/search_pushpins.sql').read().format(query=query))
     results = cursor.fetchall()
     return render_template('search_results.html', query=query,
-                        results=results, user=session['logged_in_user'])        
+                        results=results, user=session['logged_in_user'])
 
 @app.route('/corkboard/<corkboard_id>/pushpin/<pushpin_id>', methods=['GET', 'POST'])
 def view_pushpin(corkboard_id, pushpin_id):
     if 'logged_in_user' not in session:
         return redirect(url_for('login'))
-    
+
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
-    
+
     cursor.execute(open('src/sql/get_corkboard_by_id.sql').read().format(corkboard_id=corkboard_id))
     corkboard = cursor.fetchone()
-    
+
     cursor.execute(open('src/sql/get_pushpins_by_pushpin_id.sql').read().format(pushpin_id=pushpin_id))
     pushpin = cursor.fetchone()
     pushpin['time_added'] = str(pushpin['time_added'])
-    
+
     cursor.execute(open('src/sql/get_tags_for_pushpin.sql').read().format(pushpin_id=pushpin_id))
     tag_texts = cursor.fetchall()
     text = ''
@@ -255,9 +257,26 @@ def view_pushpin(corkboard_id, pushpin_id):
     cursor.execute(open('src/sql/get_all_likes.sql').read().format(pushpin_id=pushpin_id))
     likes = cursor.fetchall()
 
+    cursor.execute(open('src/sql/get_comments_by_pushpin_id.sql').read().format(pushpin_id=pushpin_id))
+    comments = cursor.fetchall()
+
+    comment_form = CommentForm()
+    if comment_form.validate_on_submit():
+        time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        comment_text = comment_form.comment_text.data
+        user = session['logged_in_user']['email']
+
+        cursor.execute(open('src/sql/add_comment.sql', 'r').read().format(comment_text=comment_text,
+                                                                          user=user,
+                                                                          pushpin_id=pushpin_id,
+                                                                          time_added=time_now))
+        db.commit()
+
+        return redirect(url_for('view_pushpin', corkboard_id=corkboard_id, pushpin_id=pushpin_id))
+
     return render_template('view_pushpin.html', corkboard=corkboard, pushpin=pushpin, tags = tags,
                            corkboard_id=corkboard_id, liked=liked, user=session['logged_in_user'], permission=permission,
-                           likes=likes)
+                           likes=likes, comment_form=comment_form, comments=comments)
 
 @app.route('/like_unlike')
 def like_unlike_pushpin():

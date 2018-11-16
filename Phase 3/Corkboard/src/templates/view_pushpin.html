@@ -25,13 +25,13 @@
 	<input
 		type="button"
 		class="pure-button pure-button-primary"
-		value="Like Pushpin"
+		value="Like"
 	/>
 	{% else %}
 	<input
 		type="button"
 		class="pure-button pure-button-primary"
-		value="Unlike Pushpin"
+		value="Unlike"
 	/>
 	{% endif %}
 </a>
@@ -46,5 +46,31 @@
 
 <h3>Description: {{ pushpin.description }}</h3>
 <h3>Tags: {{ tags }}</h3>
+<hr/>
+<div>
+	<form action="" method="post" novalidate class="pure-form">
+		{{ comment_form.hidden_tag() }}
+        <fieldset>
+			{{ comment_form.comment_text(placeholder="Enter Comment") }}
+			{% for error in comment_form.comment_text.errors %}
+				<span class="pure-form-message">{{ error }}</span>
+			{% endfor %}
+			{{ comment_form.submit(class_="pure-button pure-button-primary") }}
+        </fieldset>
+	</form>
+</div>
+<table>
+	{% for comment in comments %}
+		<tr>
+			<td style="height:40px; width:200px; margin:50px;">
+				<b>{{ comment.user_name }}:</b>
+			</td>
+			<td style="height:40px; width:600px; margin:50px;">
+				{{ comment.comment_text }}
+			</td>
+		</tr>
+	{% endfor %}
+</table>
+
 
 {% endblock %}
