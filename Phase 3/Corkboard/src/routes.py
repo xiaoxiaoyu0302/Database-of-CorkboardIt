@@ -127,14 +127,18 @@ def get_corkboard_by_id(corkboard_id):
     pushpins = cursor.fetchall()
 
     permission = session['logged_in_user']['email'] == corkboard['owner']
-
+    session['current_corkboard_owner'] = corkboard['owner']
     session['current_corkboard'] = corkboard_id
     cursor.execute(open('src/sql/is_watched.sql', 'r').read().format(user_email=session['logged_in_user']['email'],
                                                                           corkboard_id=session['current_corkboard']))
     is_watched = cursor.fetchone()['is_watched']
 
-    cursor.execute(open('src/sql/is_followed.sql', 'r').read().format(user=session['logged_in_user']['email'],
-                                                                     followed_user=corkboard['owner']))
+    # cursor.execute(open('src/sql/is_followed.sql', 'r').read().format(user=session['logged_in_user']['email'],
+    #                                                                  followed_user=corkboard['owner']))
+    # is_followed = cursor.fetchone()['is_followed']
+
+    cursor.execute(open('src/sql/is_followed.sql', 'r').read().format(user_email=session['logged_in_user']['email'],
+                                                                          followed_user_email=session['current_corkboard_owner']))
     is_followed = cursor.fetchone()['is_followed']
 
     print("is_private: " + corkboard['is_private'])
@@ -196,14 +200,31 @@ def watch_corkboard():
     db.commit()
     return redirect(url_for('get_corkboard')+'/'+ session['current_corkboard'])
 
+# @app.route('/follow_user')
+# def follow_user():
+#     db = get_db()
+#     cursor = db.cursor(cursor_factory=RealDictCursor)
+#     cursor.execute(open('src/sql/get_corkboard_by_id.sql').read().format(corkboard_id=session['current_corkboard']))
+#     corkboard_owner = cursor.fetchone()['owner']
+#     cursor.execute(open('src/sql/is_followed.sql', 'r').read().format(user=session['logged_in_user']['email'],
+#                                                                           followed_user=corkboard_owner))
+#     is_followed = cursor.fetchone()['is_followed']
+#     if is_followed:
+#         query = 'src/sql/unfollow_user.sql'
+#     else:
+#         query = 'src/sql/follow_user.sql'
+
+#     cursor.execute(open(query, 'r').read().format(user_email=session['logged_in_user']['email'],
+#                                                   followed_user=corkboard_owner))
+#     db.commit()
+#     return redirect(url_for('get_corkboard')+'/'+ session['current_corkboard'])
+
 @app.route('/follow_user')
 def follow_user():
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
-    cursor.execute(open('src/sql/get_corkboard_by_id.sql').read().format(corkboard_id=session['current_corkboard']))
-    corkboard_owner = cursor.fetchone()['owner']
-    cursor.execute(open('src/sql/is_followed.sql', 'r').read().format(user=session['logged_in_user']['email'],
-                                                                          followed_user=corkboard_owner))
+    cursor.execute(open('src/sql/is_followed.sql', 'r').read().format(user_email=session['logged_in_user']['email'],
+                                                                          followed_user_email=session['current_corkboard_owner']))
     is_followed = cursor.fetchone()['is_followed']
     if is_followed:
         query = 'src/sql/unfollow_user.sql'
@@ -211,7 +232,7 @@ def follow_user():
         query = 'src/sql/follow_user.sql'
 
     cursor.execute(open(query, 'r').read().format(user_email=session['logged_in_user']['email'],
-                                                  followed_user=corkboard_owner))
+                                                                          followed_user_email=session['current_corkboard_owner']))
     db.commit()
     return redirect(url_for('get_corkboard')+'/'+ session['current_corkboard'])
 

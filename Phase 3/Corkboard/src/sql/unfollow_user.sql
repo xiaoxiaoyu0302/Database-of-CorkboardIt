@@ -2,6 +2,6 @@ DELETE
 FROM
     "Followed"
 WHERE
-    user_email = '{user}'
+    user_email = '{user_email}'
     AND
-    followed_user_email = '{followed_user}';
+    followed_user_email = '{followed_user_email}'

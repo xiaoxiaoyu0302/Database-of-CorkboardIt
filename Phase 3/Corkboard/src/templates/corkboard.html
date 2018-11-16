@@ -5,13 +5,13 @@
 			<td>
 				<h1>{{ corkboard.title }}</h1>
 				<h3>Owned By: {{ corkboard.owner_name }}</h3>
-				{% if not permission %}
+<!-- 				{% if not permission %}
 					{% if is_followed %}
 						<a href="{{ url_for('follow_user') }}"><input class="pure-button pure-button-primary" type="button" value="Unfollow"/></a>
 					{% else %}
 						<a href="{{ url_for('follow_user') }}"><input class="pure-button pure-button-primary" type="button" value="Follow"/></a>
 					{% endif %}
-				{% endif %}
+				{% endif %} -->
 			</td>
 			<td>
 				<h3>Last Updated: {{ corkboard.last_update }}</h3>
@@ -21,6 +21,24 @@
 	</tbody>
 </table>
 <hr />
+
+<div>
+	{% if not permission %} {% if is_followed %}
+	<a href="{{ url_for('follow_user') }}"
+		><input
+			class="pure-button pure-button-primary"
+			type="button"
+			value="Unfollow"
+	/></a>
+	{% else %}
+	<a href="{{ url_for('follow_user') }}"
+		><input
+			class="pure-button pure-button-primary"
+			type="button"
+			value="Follow"
+	/></a>
+	{% endif %} {% endif %}
+</div>
 
 <h2>PushPins</h2>
 

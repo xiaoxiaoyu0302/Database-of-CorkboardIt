@@ -5,6 +5,6 @@ INSERT INTO "Followed"
     )
 VALUES
     (
-        '{user}',
-        '{followed_user}'
+        '{user_email}',
+        '{followed_user_email}'
     );
