@@ -1,0 +1,66 @@
+{% extends "base.html" %} {% block content %}
+<h1>Corkboard Statistics</h1>
+<hr />
+<table class="pure-table pure-table-bordered">
+	<thead>
+		<tr>
+			<th>User</th>
+			<th>Public Corkboards</th>
+			<th>Public Pushpins</th>
+			<th>Private Corkboards</th>
+			<th>Private Pushpins</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for stat in stats %}
+			<tr>
+				<td style="width:200px;">
+					{% if stat.email == current_user %}
+						<div style="color:red;">
+					{% endif %}
+					{{ stat.user_name }} ({{ stat.email }})
+					{% if stat.email == current_user %}
+						</div>
+					{% endif %}
+				</td>
+				<td>
+					{% if stat.email == current_user %}
+						<div style="color:red;">
+					{% endif %}
+					{{ stat.public_corkboard_count }}
+					{% if stat.email == current_user %}
+						</div>
+					{% endif %}
+				</td>
+				<td>
+					{% if stat.email == current_user %}
+						<div style="color:red;">
+					{% endif %}
+					{{ stat.public_pushpin_count }}
+					{% if stat.email == current_user %}
+						</div>
+					{% endif %}
+				</td>
+				<td>
+					{% if stat.email == current_user %}
+						<div style="color:red;">
+					{% endif %}
+					{{ stat.private_corkboard_count }}
+					{% if stat.email == current_user %}
+						</div>
+					{% endif %}
+				</td>
+				<td>
+					{% if stat.email == current_user %}
+						<div style="color:red;">
+					{% endif %}
+					{{ stat.private_pushpin_count }}
+					{% if stat.email == current_user %}
+						</div>
+					{% endif %}
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

@@ -1,6 +1,8 @@
 {% extends "base.html" %} {% block content %}
 <h1>Welcome, {{ user.first_name }} {{ user.last_name }}!</h1>
-
+<div style="padding-bottom:10px;">
+	<a href="{{ url_for('corkboard_statistics') }}"><input class="pure-button pure-button-primary" type="button" value="View Statistics"/></a>
+</div>
 <!-- Pushpin Search -->
 <form action="" method="post" novalidate>
 	{{ form.hidden_tag() }}

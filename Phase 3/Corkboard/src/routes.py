@@ -204,25 +204,6 @@ def watch_corkboard():
     db.commit()
     return redirect(url_for('get_corkboard')+'/'+ session['current_corkboard'])
 
-# @app.route('/follow_user')
-# def follow_user():
-#     db = get_db()
-#     cursor = db.cursor(cursor_factory=RealDictCursor)
-#     cursor.execute(open('src/sql/get_corkboard_by_id.sql').read().format(corkboard_id=session['current_corkboard']))
-#     corkboard_owner = cursor.fetchone()['owner']
-#     cursor.execute(open('src/sql/is_followed.sql', 'r').read().format(user=session['logged_in_user']['email'],
-#                                                                           followed_user=corkboard_owner))
-#     is_followed = cursor.fetchone()['is_followed']
-#     if is_followed:
-#         query = 'src/sql/unfollow_user.sql'
-#     else:
-#         query = 'src/sql/follow_user.sql'
-
-#     cursor.execute(open(query, 'r').read().format(user_email=session['logged_in_user']['email'],
-#                                                   followed_user=corkboard_owner))
-#     db.commit()
-#     return redirect(url_for('get_corkboard')+'/'+ session['current_corkboard'])
-
 @app.route('/follow_user')
 def follow_user():
     db = get_db()
@@ -321,3 +302,12 @@ def like_unlike_pushpin():
     db.commit()
     return redirect(url_for('view_pushpin', corkboard_id=corkboard_id, pushpin_id=pushpin_id))
 
+@app.route('/corkboard_statistics')
+def corkboard_statistics():
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+
+    cursor.execute(open('src/sql/corkboard_statistics.sql').read())
+    stats = cursor.fetchall()
+
+    return render_template('corkboard_statistics.html', stats=stats, current_user=session['logged_in_user']['email'])
