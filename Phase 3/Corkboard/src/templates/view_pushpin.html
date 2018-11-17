@@ -54,7 +54,7 @@
 	<form action="" method="post" novalidate class="pure-form">
 		{{ comment_form.hidden_tag() }}
         <fieldset>
-			{{ comment_form.comment_text(placeholder="Enter Comment") }}
+			{{ comment_form.comment_text(placeholder="Enter Comment",rows='5',cols='70') }}
 			{% for error in comment_form.comment_text.errors %}
 				<span class="pure-form-message">{{ error }}</span>
 			{% endfor %}
@@ -62,13 +62,14 @@
         </fieldset>
 	</form>
 </div>
-<table>
+<table style="margin:10px; padding:10px;">
 	{% for comment in comments %}
-		<tr>
-			<td style="height:40px; width:200px; margin:50px;">
-				<b>{{ comment.user_name }}:</b>
+		<tr style="padding:15px;">
+			<td style="width:300px; padding:10px;">
+				<b>{{ comment.user_name }}:</b><br/>
+				{{ comment.time_added }}
 			</td>
-			<td style="height:40px; width:600px; margin:50px;">
+			<td style="width:600px; padding:10px;">
 				{{ comment.comment_text }}
 			</td>
 		</tr>

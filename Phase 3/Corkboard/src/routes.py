@@ -71,7 +71,9 @@ def add_corkboard():
     if add_form.validate_on_submit():
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)
-        cursor.execute(open('src/sql/add_corkboard.sql', 'r').read().format(title=add_form.title.data,
+        corkboard_title = add_form.title.data
+        escaped_corkboard_title = corkboard_title.replace("'", "''")
+        cursor.execute(open('src/sql/add_corkboard.sql', 'r').read().format(title=escaped_corkboard_title,
                                                                             is_private=add_form.is_private.data,
                                                                             password=add_form.password.data,
                                                                             owner=session['logged_in_user']['email'],
@@ -166,7 +168,9 @@ def add_pushpin(corkboard_id):
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)
         time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        cursor.execute(open('src/sql/add_pushpin.sql', 'r').read().format(description=add_form.description.data,
+        pushpin_description = add_form.description.data
+        escaped_pushpin_description = pushpin_description.replace("'", "''")
+        cursor.execute(open('src/sql/add_pushpin.sql', 'r').read().format(description=escaped_pushpin_description,
                                                                             image_link=add_form.image_link.data,
                                                                             time_added=time_now,
                                                                             corkboard_id=corkboard_id))
@@ -285,9 +289,10 @@ def view_pushpin(corkboard_id, pushpin_id):
     if comment_form.validate_on_submit():
         time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         comment_text = comment_form.comment_text.data
+        escaped_comment_text = comment_text.replace("'","''")
         user = session['logged_in_user']['email']
 
-        cursor.execute(open('src/sql/add_comment.sql', 'r').read().format(comment_text=comment_text,
+        cursor.execute(open('src/sql/add_comment.sql', 'r').read().format(comment_text=escaped_comment_text,
                                                                           user=user,
                                                                           pushpin_id=pushpin_id,
                                                                           time_added=time_now))
